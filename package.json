@@ -1,0 +1,27 @@
+{
+  "name": "cmpe273-lab1",
+  "version": "1.0.0",
+  "description": "CMPE273: Enteprise Distributed Systems Lab 1 Assignment (Using REST Node.js &amp; React JS)",
+  "main": "index.js",
+  "scripts": {
+    "server": "node server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JackyC415/cmpe273-lab1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JackyC415/cmpe273-lab1/issues"
+  },
+  "homepage": "https://github.com/JackyC415/cmpe273-lab1#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "concurrently": "^4.1.2",
+    "express": "^4.17.1"
+  }
+}
