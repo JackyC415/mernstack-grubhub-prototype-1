@@ -1,39 +1,21 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Main from './components/Main';
+import {BrowserRouter} from 'react-router-dom';
 
+//App Component
 class App extends Component {
-
-  state = {
-    data : null
-  }
-
-  componentDidMount() {
-    this.callBackEndAPI()
-      .then(res => this.setState({data:res.express}))
-      .catch(err => console.log(err));
-  }
-
-  callBackEndAPI = async () => {
-    const response = await fetch('/express_backend');
-    const body = await response.json();
-
-    if(response.status !== 200) {
-      throw Error(body.message);
-    }
-    return body;
-  };
-
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-        </header>
-          <p className="App-intro">{this.state.data}</p>
-      </div>
+      //Use Browser Router to route to different pages
+      <BrowserRouter>
+        <div>
+          {/* App Component Has a Child Component called Main*/}
+          <Main/>
+        </div>
+      </BrowserRouter>
     );
   }
 }
-
+//Export the App component so that it can be used in index.js
 export default App;
