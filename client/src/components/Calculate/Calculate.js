@@ -12,7 +12,7 @@ class Calculator extends Component {
             firstNum : "",
             secondNum : "",
             operation : "",
-            computedValue : 0
+            result : 0
         }
 
         //Bind the handlers to this class
@@ -43,29 +43,33 @@ class Calculator extends Component {
     calculateOperation = (param) => e => {
 
         this.state.operation = param;
-        //<p>Answer: {this.state.computedValue} </p> 
 
         const data = {
             firstNum : this.state.firstNum,
             secondNum : this.state.secondNum,
-            operation : this.state.operation
+            operation : this.state.operation,
+            result : this.state.result
         }
         
         switch(param) {
             case "add": 
+                const add = parseInt(this.state.firstNum) + parseInt(this.state.secondNum);
+                this.setState({result : add});
                 this.sendRestAPI(data)
-                /*
-                const answer = parseInt(this.state.firstNum) + parseInt(this.state.secondNum);
-                this.setState({computedValue : answer});
-                */
             break;
-            case "sub": 
+            case "sub":
+                const sub = parseInt(this.state.firstNum) - parseInt(this.state.secondNum);
+                this.setState({result : sub}); 
                 this.sendRestAPI(data)
             break;
             case "mul": 
+                const mul = parseInt(this.state.firstNum) * parseInt(this.state.secondNum);
+                this.setState({result : mul});
                 this.sendRestAPI(data)
             break;
             case "div": 
+                const div = parseInt(this.state.firstNum) / parseInt(this.state.secondNum);
+                this.setState({result : div});
                 this.sendRestAPI(data)
             break;
             default: 
@@ -95,6 +99,9 @@ class Calculator extends Component {
                             <button onClick = {this.calculateOperation("sub")} class="btn btn-primary" type="button">Sub</button>
                             <button onClick = {this.calculateOperation("mul")} class="btn btn-primary" type="button">Mul</button>
                             <button onClick = {this.calculateOperation("div")} class="btn btn-primary" type="button">Div</button>
+                        </div>
+                        <div>
+                            Answer: {this.state.result}
                         </div>
                 </form>
                 </div>

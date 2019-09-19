@@ -30,7 +30,6 @@ app.post('/calculate',function(req,res){
 
     switch(req.body.operation) {
         case 'add':
-            //add
             res.send({express : 'Express server is connected to React!'});
         break;
     }
