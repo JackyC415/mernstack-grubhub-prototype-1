@@ -29,22 +29,22 @@ app.post('/calculate',function(req,res){
     console.log("INSIDE CALCULATE");
     console.log(req.body);
 
+    const firstNum = parseInt(req.body.firstNum);
+    const secondNum = parseInt(req.body.secondNum);
+
     switch(req.body.operation) {
         case "add": 
-            var add = parseInt(req.body.firstNum) + parseInt(req.body.secondNum);
-            res.status(200).send(JSON.stringify(add));
+            res.status(200).send(JSON.stringify(firstNum + secondNum));
         break;
         case "sub":
-            var sub = parseInt(req.body.firstNum) - parseInt(req.body.secondNum);
-            res.status(200).send(JSON.stringify(sub));
+            res.status(200).send(JSON.stringify(firstNum - secondNum));
         break;
         case "mul": 
-            var mul = parseInt(req.body.firstNum) * parseInt(req.body.secondNum);
-            res.send(JSON.stringify(mul));
+            res.status(200).send(JSON.stringify(firstNum * secondNum));
         break;
         case "div": 
-            var div = parseInt(req.body.firstNum) / parseInt(req.body.secondNum);
-            res.send(JSON.stringify(div));
+            var ans = (secondNum != 0 ? JSON.stringify(firstNum/secondNum) : 'Infinity');
+            res.status(200).send(ans);
         break;
         default: 
             res.status(404).send(null);
