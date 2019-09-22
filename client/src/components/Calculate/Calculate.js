@@ -33,43 +33,33 @@ class Calculator extends Component {
         })
     }
 
-    sendRestAPI = (d) => {
-        axios.post('http://localhost:3001/calculate', d)
-            .then(response => {
-            console.log("Status Code: ", response.status);
+    sendRestAPI = (data) => {
+        axios.post('http://localhost:3001/calculate', data)
+            .then(res => {
+                this.setState({result: res.data})
         });
     }
 
     calculateOperation = (param) => e => {
 
-        this.state.operation = param;
-
         const data = {
             firstNum : this.state.firstNum,
             secondNum : this.state.secondNum,
-            operation : this.state.operation,
+            operation : param,
             result : this.state.result
         }
         
         switch(param) {
             case "add": 
-                const add = parseInt(this.state.firstNum) + parseInt(this.state.secondNum);
-                this.setState({result : add});
                 this.sendRestAPI(data)
             break;
             case "sub":
-                const sub = parseInt(this.state.firstNum) - parseInt(this.state.secondNum);
-                this.setState({result : sub}); 
                 this.sendRestAPI(data)
             break;
             case "mul": 
-                const mul = parseInt(this.state.firstNum) * parseInt(this.state.secondNum);
-                this.setState({result : mul});
                 this.sendRestAPI(data)
             break;
             case "div": 
-                const div = parseInt(this.state.firstNum) / parseInt(this.state.secondNum);
-                this.setState({result : div});
                 this.sendRestAPI(data)
             break;
             default: 
@@ -86,13 +76,11 @@ class Calculator extends Component {
                 <form action="http://127.0.0.1:3001/calculate" method="post">
                         <div style={{width: '30%'}} class="form-group">
                             <input  type="number" onChange = {this.getFirstNumber} class="form-control" name="firstNum" placeholder="First Number"/>
-                        </div>
-                        <br/>
+                        </div><br/>
 
                         <div style={{width: '30%'}} class="form-group">
                             <input  type="number" onChange = {this.getSecondNumber} class="form-control" name="secondNum" placeholder="Second Number"/>
-                        </div>
-                        <br/>
+                        </div><br/>
 
                         <div style={{width: '30%'}}>
                             <button onClick = {this.calculateOperation("add")} class="btn btn-primary" type="button">Add</button>
@@ -101,7 +89,7 @@ class Calculator extends Component {
                             <button onClick = {this.calculateOperation("div")} class="btn btn-primary" type="button">Div</button>
                         </div>
                         <div>
-                            Answer: {this.state.result}
+                            Result: {this.state.result}
                         </div>
                 </form>
                 </div>

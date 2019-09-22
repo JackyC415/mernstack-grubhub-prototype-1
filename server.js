@@ -19,9 +19,10 @@ app.use(function(req, res, next) {
     next();
   });
 
-app.get('/', function(req,res) {
-    res.send("To access calculator: http://localhost:3001/calculate");
-})
+
+app.get('/grubhub', function(req,res) {
+    console.log("INSIDE GRUBHUB");
+});
 
 app.post('/calculate',function(req,res){
     
@@ -29,9 +30,24 @@ app.post('/calculate',function(req,res){
     console.log(req.body);
 
     switch(req.body.operation) {
-        case 'add':
-            res.send({express : 'Express server is connected to React!'});
+        case "add": 
+            var add = parseInt(req.body.firstNum) + parseInt(req.body.secondNum);
+            res.status(200).send(JSON.stringify(add));
         break;
+        case "sub":
+            var sub = parseInt(req.body.firstNum) - parseInt(req.body.secondNum);
+            res.status(200).send(JSON.stringify(sub));
+        break;
+        case "mul": 
+            var mul = parseInt(req.body.firstNum) * parseInt(req.body.secondNum);
+            res.send(JSON.stringify(mul));
+        break;
+        case "div": 
+            var div = parseInt(req.body.firstNum) / parseInt(req.body.secondNum);
+            res.send(JSON.stringify(div));
+        break;
+        default: 
+            res.status(404).send(null);
     }
 
 });
