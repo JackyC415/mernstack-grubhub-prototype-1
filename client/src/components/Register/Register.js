@@ -45,7 +45,7 @@ class Register extends Component {
     }
 
     switchForm = (e) => {
-        (this.state.owner == false) ? this.setState({owner: true}) : this.setState({owner: false});
+        (!this.state.owner) ? this.setState({owner: true}) : this.setState({owner: false});
     }
 
     render(){
