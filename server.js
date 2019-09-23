@@ -1,6 +1,3 @@
-/*References: 
-https://www.w3schools.com/nodejs/nodejs_mysql_create_db.asp 
-*/
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -40,8 +37,8 @@ app.post('/calculate', (req,res) => {
     console.log("INSIDE CALCULATE");
     console.log(req.body);
 
-    const firstNum = parseInt(req.body.firstNum);
-    const secondNum = parseInt(req.body.secondNum);
+    var firstNum = parseInt(req.body.firstNum);
+    var secondNum = parseInt(req.body.secondNum);
 
     switch(req.body.operation) {
         case "add": 
@@ -61,6 +58,35 @@ app.post('/calculate', (req,res) => {
             res.status(404).send(null);
     }
 
+});
+
+app.post('/register', (req,res) => {
+    console.log("INSIDE REGISTER");
+    console.log(req.body);
+
+    if(req.body.owner) {
+        connection.query("INSERT INTO register (name, email, password) VALUES ('"+req.body.name+"','"+req.body.email+"','"+req.body.password+"')", (req,res) => {
+            if (err) throw err;
+                console.log("Inserted user data!");
+            res.end();
+        });
+    } else {
+        connection.query("INSERT INTO register (name, email, password, restaurantname, zipcode) VALUES ('"+req.body.name+"','"+req.body.email+"','"+req.body.password+"','"+req.body.restaurantname+"','"+req.body.zipcode+"')", (req,res) => {
+            if (err) throw err;
+                console.log("Inserted owner data!");
+            res.end();
+        });
+    }
+});
+
+app.post('/login', (req, res) => {
+    console.log("INSIDE LOGIN");
+    console.log(req.body);
+
+    //default scenario
+    if(req.body.name == "admin" && req.body.password == "admin") 
+        console.log('redirecting...');
+    //query database to validate credential
 });
 
 app.listen(3001, () => console.log('Server listening on port 3001'));

@@ -43,19 +43,19 @@ class Calculator extends Component {
         
         switch(param) {
             case "add": 
-                this.sendRestAPI(data)
+                this.sendRestAPI(data);
             break;
             case "sub":
-                this.sendRestAPI(data)
+                this.sendRestAPI(data);
             break;
             case "mul": 
-                this.sendRestAPI(data)
+                this.sendRestAPI(data);
             break;
             case "div": 
-                this.sendRestAPI(data)
+                this.sendRestAPI(data);
             break;
             default: 
-                console.log("throw err");
+                console.log("Invalid calculator operation...");
         }
     
     }
@@ -66,7 +66,7 @@ class Calculator extends Component {
                 <br/>
                 <div class="container">
                     <h1>Calculator</h1>
-                <form action="http://127.0.0.1:3001/calculate" method="post">
+                    <form action="http://127.0.0.1:3001/calculate" method="post">
                         <div style={{width: '30%'}} class="form-group">
                             <input  type="number" class="form-control" name="firstNum" placeholder="First Number" onChange = {this.handleChange} required/>
                         </div><br/>
@@ -84,7 +84,7 @@ class Calculator extends Component {
                         <div>
                             Result: {this.state.result}
                         </div>
-                </form>
+                    </form>
                 </div>
             </div>
         )

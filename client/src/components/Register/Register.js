@@ -26,32 +26,47 @@ class Register extends Component {
         this.setState({[e.target.name]: e.target.value});
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-
-        const data = {
-            name: this.state.name,
-            email: this.state.email,
-            password: this.state.password
-        }
-
+    //send registration data to server for processing
+    sendRestAPI = (data) => {
         axios.post('http://localhost:3001/register', data)
             .then(res => {
                 res.status(200);
         });
-        
-        //api call, store into database
+    }
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+
+        const userData = {
+            name: this.state.name,
+            email: this.state.email,
+            password: this.state.password,
+            owner: false
+        }
+
+        const ownerData = {
+            name: this.state.name,
+            email: this.state.email,
+            password: this.state.password,
+            restaurantname: this.state.restaurantname,
+            zipcode: this.state.zipcode,
+            owner: true
+        }
+
+        //insert data to mysql database; send post request to server
+        (!this.state.owner) ? this.sendRestAPI(userData) : this.sendRestAPI(ownerData);
 
     }
 
+    //switch between user and owner sign up form
     switchForm = (e) => {
         (!this.state.owner) ? this.setState({owner: true}) : this.setState({owner: false});
     }
 
     render(){
-
         let ownerForm = null;
         let accountType = "Owner";
+        //pass owner registration form into main render
         if(this.state.owner) {
             ownerForm = 
             <div>
@@ -60,6 +75,7 @@ class Register extends Component {
             </div>
             accountType = "User";
         }
+        //render user registration form by default
         return(
             <div class="container">
             <form action="http://127.0.0.1:3001/register" method="post">

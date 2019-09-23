@@ -12,7 +12,7 @@ class Navbar extends Component {
             <nav class="navbar navbar-inverse">
                 <div class="container-fluid">
                     <div class="navbar-header">
-                        <a class="navbar-brand" href="#">Lab1</a>
+                        <a class="navbar-brand" href="/">Lab1</a>
                     </div>
                     <ul class="nav navbar-nav">
                     <li><Link to="/calculate">Calculate</Link></li>
