@@ -16,7 +16,8 @@ class Navbar extends Component {
                     </div>
                     <ul class="nav navbar-nav">
                     <li><Link to="/calculate">Calculate</Link></li>
-                    <li><Link to="/grubhub">GrubHub</Link></li>
+                    <li><Link to="/register">Register</Link></li>
+                    <li><Link to="/login">Login</Link></li>
                     </ul>
                 </div>
             </nav>

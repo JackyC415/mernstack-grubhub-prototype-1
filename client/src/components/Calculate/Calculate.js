@@ -16,21 +16,12 @@ class Calculator extends Component {
         }
 
         //Bind the handlers to this class
-        this.getFirstNumber = this.getFirstNumber.bind(this);
-        this.getSecondNumber = this.getSecondNumber.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.calculateOperation = this.calculateOperation.bind(this);
     }
 
-    getFirstNumber = (e) => {
-        this.setState({
-            firstNum : e.target.value
-        })
-    }
-
-    getSecondNumber = (e) => {
-        this.setState({
-            secondNum : e.target.value
-        })
+    handleChange = (e) => {
+        this.setState({[e.target.name]: e.target.value});
     }
 
     sendRestAPI = (data) => {
@@ -41,6 +32,7 @@ class Calculator extends Component {
     }
 
     calculateOperation = (param) => e => {
+        e.preventDefault();
 
         const data = {
             firstNum : this.state.firstNum,
@@ -73,13 +65,14 @@ class Calculator extends Component {
             <div>
                 <br/>
                 <div class="container">
+                    <h1>Calculator</h1>
                 <form action="http://127.0.0.1:3001/calculate" method="post">
                         <div style={{width: '30%'}} class="form-group">
-                            <input  type="number" onChange = {this.getFirstNumber} class="form-control" name="firstNum" placeholder="First Number"/>
+                            <input  type="number" class="form-control" name="firstNum" placeholder="First Number" onChange = {this.handleChange} required/>
                         </div><br/>
 
                         <div style={{width: '30%'}} class="form-group">
-                            <input  type="number" onChange = {this.getSecondNumber} class="form-control" name="secondNum" placeholder="Second Number"/>
+                            <input  type="number" class="form-control" name="secondNum" placeholder="Second Number" onChange = {this.handleChange} required/>
                         </div><br/>
 
                         <div style={{width: '30%'}}>
@@ -87,7 +80,7 @@ class Calculator extends Component {
                             <button onClick = {this.calculateOperation("sub")} class="btn btn-primary" type="button">Sub</button>
                             <button onClick = {this.calculateOperation("mul")} class="btn btn-primary" type="button">Mul</button>
                             <button onClick = {this.calculateOperation("div")} class="btn btn-primary" type="button">Div</button>
-                        </div>
+                        </div><br/>
                         <div>
                             Result: {this.state.result}
                         </div>

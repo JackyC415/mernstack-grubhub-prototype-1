@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {Route} from 'react-router-dom';
 import Navbar from './Navbar/Navbar';
 import Calculate from './Calculate/Calculate';
-import GrubHub from './GrubHub/GrubHub';
+import Login from './Login/Login';
+import Register from './Register/Register';
 
 //Create a Main Component
 class Main extends Component {
@@ -12,7 +13,8 @@ class Main extends Component {
                 {/*Render Different Component based on Route*/}
                 <Route path="/" component={Navbar}/>
                 <Route path="/calculate" component={Calculate}/>
-                <Route path="/grubhub" component={GrubHub}/>
+                <Route path="/register" component={Register}/>
+                <Route path="/login" component={Login}/>
             </div>
         )
     }

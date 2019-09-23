@@ -1,14 +1,15 @@
+/*References: 
+https://www.w3schools.com/nodejs/nodejs_mysql_create_db.asp 
+*/
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const mysql = require('mysql');
 var cors = require('cors');
 app.set('view engine', 'ejs');
-
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
-
 app.use(bodyParser.json());
-
 //Allow Access Control
 app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -19,13 +20,23 @@ app.use(function(req, res, next) {
     next();
   });
 
-
-app.get('/grubhub', function(req,res) {
-    console.log("INSIDE GRUBHUB");
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'password',
+    database: 'lab1DB'
 });
 
-app.post('/calculate',function(req,res){
-    
+connection.connect((err) => {
+
+    if(!err)
+        console.log('Database is connected!');
+    else
+        console.log('Database not connected!');
+});
+
+app.post('/calculate', (req,res) => {
+
     console.log("INSIDE CALCULATE");
     console.log(req.body);
 
