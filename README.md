@@ -10,3 +10,4 @@ Instructions to run applicaton:
 3. npm install
 4. cd .. or return to root directory
 5. npm run dev
+6. access localhost:3030 on browser
