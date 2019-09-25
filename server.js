@@ -65,9 +65,9 @@ app.post('/register', (req,res) => {
     console.log(req.body);
 
     if(req.body.owner) {
-        connection.query("INSERT INTO register (name, email, password) VALUES ('"+req.body.name+"','"+req.body.email+"','"+req.body.password+"')", (req,res) => {
+        connection.query("INSERT INTO register (name, email, password) VALUES ('"+req.body.name+"','"+req.body.email+"','"+req.body.password+"','"+req.body.owner+"')", (req,res) => {
             if (err) throw err;
-                console.log("Inserted user data!");
+                console.log("Inserted buyer data!");
             res.end();
         });
     } else {

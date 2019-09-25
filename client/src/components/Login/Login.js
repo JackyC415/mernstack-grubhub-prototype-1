@@ -44,10 +44,12 @@ class Login extends Component {
         return(
             <div class="container">
             <form action="http://127.0.0.1:3001/login" method="post">
-            <h1>Create account</h1>
+            <h1>Login</h1>
+                    <div>
                     Name: <input type="text" name="name" placeholder="Your name" pattern="^([a-zA-Z]+\s)*[a-zA-Z]+$" value={this.state.name} onChange = {this.handleChange} required></input><br/>
                     Password: <input type="password" name="password" placeholder="At least 6 characters" minlength="6" maxlength="16" value={this.state.password} onChange = {this.handleChange} required></input><br/>
                     <button className="btn btn-primary" onClick={this.handleSubmit}>Login</button>
+                    </div>
                     New? <Link to="/register" className="btn btn-link">Create account</Link>
             </form>
             </div>

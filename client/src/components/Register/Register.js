@@ -1,7 +1,9 @@
 import React,{Component} from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-//import { connect } from 'react-redux';
+import { connect } from "react-redux";
+import uuidv1 from "uuid";
+import { registerUser } from "../../js/actions/index";
 
 //create the Navbar Component
 class Register extends Component {
@@ -35,9 +37,11 @@ class Register extends Component {
     }
 
     handleSubmit = (e) => {
+
+        /*
         e.preventDefault();
 
-        const userData = {
+        const buyerData = {
             name: this.state.name,
             email: this.state.email,
             password: this.state.password,
@@ -53,8 +57,20 @@ class Register extends Component {
             owner: true
         }
 
-        //insert data to mysql database; send post request to server
-        (!this.state.owner) ? this.sendRestAPI(userData) : this.sendRestAPI(ownerData);
+        //check account type and make post request with respective data
+        if(!this.state.owner) {
+            this.sendRestAPI(buyerData);
+        } else {
+            this.sendRestAPI(ownerData);
+        }*/
+
+        e.preventDefault();
+        const { name } = this.state;
+        const id = uuidv1();
+        this.props.registerUser({ name, id });
+        this.setState({ name: "" });
+        this.setState({ email: "" });
+        this.setState({ password: "" });
 
     }
 
@@ -70,39 +86,37 @@ class Register extends Component {
         if(this.state.owner) {
             ownerForm = 
             <div>
-                Restaurant Name: <input type="text" name="restaurantname" placeholder="Restaurant name" value={this.state.restaurantname} onChange={this.handleChange} required></input><br/>
+                Restaurant Name: <input type="text" name="restaurantname" placeholder="Restaurant name" value={this.state.restaurantname} onChange={this.handleChange} required ></input><br/>
                 ZipCode: <input type="number" name="zipcode" placeholder="Zipcode" value ={this.state.zipcode} onChange={this.handleChange} minLength="6" maxLength="10" required ></input>
             </div>
-            accountType = "User";
+            accountType = "Buyer";
         }
         //render user registration form by default
         return(
             <div class="container">
-            <form action="http://127.0.0.1:3001/register" method="post">
-            <h1>Create an account</h1>
+            <form>
+            <h1>Create account</h1>
+                    <div>
                     Name: <input type="text" name="name" placeholder="Your name" pattern="^([a-zA-Z]+\s)*[a-zA-Z]+$" value={this.state.name} onChange = {this.handleChange} required></input><br/>
-                    Email: <input type="email" name="email" placeholder="example@gmail.com" value={this.state.email} onChange = {this.handleChange} required></input><br/>
+                    Email: <input type="email" id="email" name="email" placeholder="example@gmail.com" value={this.state.email} onChange = {this.handleChange} required></input><br/>
                     Password: <input type="password" name="password" placeholder="At least 6 characters" minlength="6" maxlength="16" value={this.state.password} onChange = {this.handleChange} required></input><br/>
                     {ownerForm}
-                    <button className="btn btn-primary" onClick={this.handleSubmit}>Register</button>
+                    </div>
+                    <div>
+                    <button type="submit" className="btn btn-success btn-lg" onClick={this.handleSubmit} >Register</button>
+                    </div>
                     Already have an account? <Link to="/login" className="btn btn-link">Login</Link><br/>
-                    <a href='#' onClick={this.switchForm}>Sign Up as {accountType}</a><br/>
+                    Switch Form: <a href='#' onClick={this.switchForm}>Sign Up as {accountType}</a><br/>
             </form>
             </div>
         )
     }
 }
 
-
-/*
-function mapState(state) {
-    const {registering} = state.registration;
-    return {registering};
-}
-
-const actionCreators = {
-    register: userActions.register
-}
-
-const connectRegister = connect(mapState, actionCreators) (Register);*/
-export default Register;
+function mapDispatchToProps(dispatch) {
+    return {
+      registerUser: user => dispatch(registerUser(user))
+    };
+  }
+  const Form = connect(null, mapDispatchToProps)(Register);
+  export default Form;

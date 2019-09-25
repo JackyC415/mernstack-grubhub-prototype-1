@@ -62,8 +62,6 @@ class Calculator extends Component {
 
     render(){
         return(
-            <div>
-                <br/>
                 <div class="container">
                     <h1>Calculator</h1>
                     <form action="http://127.0.0.1:3001/calculate" method="post">
@@ -86,7 +84,6 @@ class Calculator extends Component {
                         </div>
                     </form>
                 </div>
-            </div>
         )
     }
 }
