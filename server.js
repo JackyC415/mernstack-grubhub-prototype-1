@@ -58,12 +58,12 @@ app.post('/calculate', (req,res) => {
             res.status(404).send(null);
     }
 
-});
+})
 
 app.post('/register', (req,res) => {
     console.log("INSIDE REGISTER");
     console.log(req.body);
-
+    /*
     if(req.body.owner) {
         connection.query("INSERT INTO register (name, email, password) VALUES ('"+req.body.name+"','"+req.body.email+"','"+req.body.password+"','"+req.body.owner+"')", (req,res) => {
             if (err) throw err;
@@ -76,8 +76,8 @@ app.post('/register', (req,res) => {
                 console.log("Inserted owner data!");
             res.end();
         });
-    }
-});
+    }*/
+})
 
 app.post('/login', (req, res) => {
     console.log("INSIDE LOGIN");
@@ -85,7 +85,7 @@ app.post('/login', (req, res) => {
 
     //default scenario
     if(req.body.name == "admin" && req.body.password == "admin") 
-        console.log('redirecting...');
+        console.log('Server: redirecting to home...');
     //query database to validate credential
 });
 

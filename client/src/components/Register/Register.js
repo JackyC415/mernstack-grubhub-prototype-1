@@ -5,17 +5,16 @@ import { connect } from "react-redux";
 import uuidv1 from "uuid";
 import { registerUser } from "../../js/actions/index";
 
-//create the Navbar Component
 class Register extends Component {
     constructor(props){
         super(props);
 
         this.state = {
-            name: '',
-            email: '',
-            password: '',
-            restaurantname: '',
-            zipcode: '',
+            name: null,
+            email: null,
+            password: null,
+            restaurantname: null,
+            zipcode: null,
             owner: false
         };
 
@@ -32,14 +31,15 @@ class Register extends Component {
     sendRestAPI = (data) => {
         axios.post('http://localhost:3001/register', data)
             .then(res => {
-                res.status(200);
+                console.log("API sent.");
         });
     }
 
     handleSubmit = (e) => {
 
-        /*
         e.preventDefault();
+
+        this.setState({status: "User is registered!"});
 
         const buyerData = {
             name: this.state.name,
@@ -62,12 +62,12 @@ class Register extends Component {
             this.sendRestAPI(buyerData);
         } else {
             this.sendRestAPI(ownerData);
-        }*/
+        }
 
-        e.preventDefault();
         const { name } = this.state;
+        const { email } = this.state;
         const id = uuidv1();
-        this.props.registerUser({ name, id });
+        this.props.registerUser({ name, id, email });
         this.setState({ name: "" });
         this.setState({ email: "" });
         this.setState({ password: "" });

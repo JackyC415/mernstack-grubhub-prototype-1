@@ -1,6 +1,9 @@
 import React,{Component} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import uuidv1 from "uuid";
+import { connect } from "react-redux";
+import { loginUser } from "../../js/actions/index";
 
 //create the Navbar Component
 class Login extends Component {
@@ -28,13 +31,21 @@ class Login extends Component {
     }
 
     handleSubmit = (e) => {
+
         e.preventDefault();
         
+        /*
         const data = {
             name: this.state.name,
             password: this.state.password
         }
-        this.sendRestAPI(data);
+        this.sendRestAPI(data);*/
+
+        const { name } = this.state;
+        const id = uuidv1();
+        this.props.loginUser({ name, id });
+        this.setState({ name: "" });
+        this.setState({ password: "" });
     }
 
     render(){
@@ -57,4 +68,10 @@ class Login extends Component {
     }
 }
 
-export default Login;
+function mapDispatchToProps(dispatch) {
+    return {
+      loginUser: user => dispatch(loginUser(user))
+    };
+  }
+const Form = connect(null, mapDispatchToProps)(Login);
+ export default Form;

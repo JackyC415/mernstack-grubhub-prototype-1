@@ -11,6 +11,13 @@ export function forbiddenWordsMiddleware({ dispatch }) {
         if (foundWord.length) {
           return dispatch({ type: "INVALID CREDENTIALS" });
         }
+      } else if (action.type === LOGIN_USER) {
+        const foundWord = forbiddenWords.filter(word =>
+          action.payload.name.includes(word)
+        );
+        if (foundWord.length) {
+          return dispatch({ type: "INVALID CREDENTIALS" });
+        }
       }
       return next(action);
     };

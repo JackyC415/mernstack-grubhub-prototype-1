@@ -1,4 +1,4 @@
-import { REGISTER_USER } from "../constants/action-types";
+import { REGISTER_USER, LOGIN_USER } from "../constants/action-types";
 const initialState = {
   names: [],
   emails:[]
@@ -6,6 +6,11 @@ const initialState = {
 
 function rootReducer(state = initialState, action) {
     if (action.type === REGISTER_USER) {
+      console.log("processing in reducer")
+      return Object.assign({}, state, {
+        names: state.names.concat(action.payload)
+      });
+    } else if (action.type === LOGIN_USER) {
       console.log("processing in reducer")
       return Object.assign({}, state, {
         names: state.names.concat(action.payload)
