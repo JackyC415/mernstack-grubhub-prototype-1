@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/JackyC415/cmpe273-lab1#readme",
   "dependencies": {
+    "@hapi/joi": "^16.1.4",
+    "@types/hapi__joi": "^15.0.4",
     "body-parser": "^1.19.0",
     "concurrently": "^4.1.2",
     "cors": "^2.8.5",
