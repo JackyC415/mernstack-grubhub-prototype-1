@@ -1,7 +1,6 @@
 import React,{Component} from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-//import { connect } from 'react-redux';
 
 //create the Navbar Component
 class Register extends Component {
@@ -9,12 +8,13 @@ class Register extends Component {
         super(props);
 
         this.state = {
-            name: '',
-            email: '',
-            password: '',
-            restaurantname: '',
-            zipcode: '',
-            owner: false
+            name: null,
+            email: null,
+            password: null,
+            restaurantname: null,
+            zipcode: null,
+            owner: false,
+            output: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -23,6 +23,7 @@ class Register extends Component {
     }
 
     handleChange = (e) => {
+        e.preventDefault();
         this.setState({[e.target.name]: e.target.value});
     }
 
@@ -30,14 +31,14 @@ class Register extends Component {
     sendRestAPI = (data) => {
         axios.post('http://localhost:3001/register', data)
             .then(res => {
-                res.status(200);
+                this.setState({output: res.data})
         });
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
 
-        const userData = {
+        const buyerData = {
             name: this.state.name,
             email: this.state.email,
             password: this.state.password,
@@ -53,8 +54,11 @@ class Register extends Component {
             owner: true
         }
 
-        //insert data to mysql database; send post request to server
-        (!this.state.owner) ? this.sendRestAPI(userData) : this.sendRestAPI(ownerData);
+        if(!this.state.owner) {
+            this.sendRestAPI(buyerData);
+        } else {
+            this.sendRestAPI(ownerData);
+        }
 
     }
 
@@ -64,45 +68,36 @@ class Register extends Component {
     }
 
     render(){
-        let ownerForm = null;
-        let accountType = "Owner";
+        var ownerForm = null;
+        var accountType = "Owner";
         //pass owner registration form into main render
         if(this.state.owner) {
             ownerForm = 
             <div>
-                Restaurant Name: <input type="text" name="restaurantname" placeholder="Restaurant name" value={this.state.restaurantname} onChange={this.handleChange} required></input><br/>
-                ZipCode: <input type="number" name="zipcode" placeholder="Zipcode" value ={this.state.zipcode} onChange={this.handleChange} minLength="6" maxLength="10" required ></input>
+                Restaurant Name: <input type="text" name="restaurantname" placeholder="Restaurant name" value={this.state.restaurantname} onChange={this.handleChange}></input><br/>
+                ZipCode: <input type="number" name="zipcode" placeholder="Zipcode" value ={this.state.zipcode} onChange={this.handleChange}></input>
             </div>
             accountType = "User";
         }
         //render user registration form by default
         return(
             <div class="container">
-            <form action="http://127.0.0.1:3001/register" method="post">
+            <form method = "post">
             <h1>Create an account</h1>
-                    Name: <input type="text" name="name" placeholder="Your name" pattern="^([a-zA-Z]+\s)*[a-zA-Z]+$" value={this.state.name} onChange = {this.handleChange} required></input><br/>
+                    Name: <input type="text" name="name" placeholder="Your name" minlength="3" maxlength="30" value={this.state.name} onChange = {this.handleChange} required></input><br/>
                     Email: <input type="email" name="email" placeholder="example@gmail.com" value={this.state.email} onChange = {this.handleChange} required></input><br/>
-                    Password: <input type="password" name="password" placeholder="At least 6 characters" minlength="6" maxlength="16" value={this.state.password} onChange = {this.handleChange} required></input><br/>
+                    Password: <input type="password" name="password" placeholder="At least 6 characters" minlength="6" maxlength="16" id="password" value={this.state.password} onChange = {this.handleChange} required></input><br/>
                     {ownerForm}
-                    <button className="btn btn-primary" onClick={this.handleSubmit}>Register</button>
+                    <input type="submit" name="Register" onclick={this.handleSubmit}></input><br/>
                     Already have an account? <Link to="/login" className="btn btn-link">Login</Link><br/>
                     <a href='#' onClick={this.switchForm}>Sign Up as {accountType}</a><br/>
+                    <div>
+                        {this.state.output}
+                    </div>
             </form>
             </div>
         )
     }
 }
 
-
-/*
-function mapState(state) {
-    const {registering} = state.registration;
-    return {registering};
-}
-
-const actionCreators = {
-    register: userActions.register
-}
-
-const connectRegister = connect(mapState, actionCreators) (Register);*/
 export default Register;

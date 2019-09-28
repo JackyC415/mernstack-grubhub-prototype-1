@@ -8,8 +8,8 @@ class Login extends Component {
         super(props);
 
         this.state = {
-            name: '',
-            password: ''
+            email: null,
+            password: null
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -31,7 +31,7 @@ class Login extends Component {
         e.preventDefault();
         
         const data = {
-            name: this.state.name,
+            email: this.state.email,
             password: this.state.password
         }
         this.sendRestAPI(data);
@@ -43,11 +43,11 @@ class Login extends Component {
 
         return(
             <div class="container">
-            <form action="http://127.0.0.1:3001/login" method="post">
-            <h1>Create account</h1>
-                    Name: <input type="text" name="name" placeholder="Your name" pattern="^([a-zA-Z]+\s)*[a-zA-Z]+$" value={this.state.name} onChange = {this.handleChange} required></input><br/>
+                <form method = "post">
+                <h1>Create account</h1>
+                    Email: <input type="email" name="email" placeholder="example@gmail.com" value={this.state.email} onChange = {this.handleChange} required></input><br/>
                     Password: <input type="password" name="password" placeholder="At least 6 characters" minlength="6" maxlength="16" value={this.state.password} onChange = {this.handleChange} required></input><br/>
-                    <button className="btn btn-primary" onClick={this.handleSubmit}>Login</button>
+                    <input type="submit" name="Login" onclick={this.handleSubmit}></input><br/>
                     New? <Link to="/register" className="btn btn-link">Create account</Link>
             </form>
             </div>

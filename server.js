@@ -1,8 +1,10 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const Joi = require('@hapi/joi');
 const mysql = require('mysql');
 var cors = require('cors');
+
 app.set('view engine', 'ejs');
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -25,7 +27,6 @@ const connection = mysql.createConnection({
 });
 
 connection.connect((err) => {
-
     if(!err)
         console.log('Database is connected!');
     else
@@ -64,8 +65,38 @@ app.post('/register', (req,res) => {
     console.log("INSIDE REGISTER");
     console.log(req.body);
 
+    //input validation with joi
+    const schema = Joi.object({
+        name: Joi.string().min(3).max(30).required(),
+        email: Joi.string().trim().email().required(),
+        password: Joi.string().min(6).max(16).pattern(/^[a-zA-Z0-9]{3,30}$/).required()
+    })
+
+    const { error, value } = schema.validate({ name: req.body.name, email: req.body.email, password: req.body.password });
+    if(error) {
+       console.log(error);
+       res.send('Register failed! Please ensure your inputs are valid.');
+    } else {
+       console.log(value);
+       res.send('Registered successfully!');
+       //insert data to mySQL
+   }
+    /*
+    let checkEmailQuery = "SELECT * FROM register WHERE email = ? LIMIT 1";
+    let insertRegisterQuery = "INSERT INTO register " + "SET name = ?, email = ?, password = ?";
+    connection.query(checkEmailQuery, [email_input], (err, data)) {
+        if(err) {
+            console.log(err);
+        } else if (data.length > 0) {
+            console.log("user already exists");
+        } else {
+            connection.query(insertRegisterQuery, [req.body.name, req.body.email, req.body.password]);
+        }
+    }
+    });
+
     if(req.body.owner) {
-        connection.query("INSERT INTO register (name, email, password) VALUES ('"+req.body.name+"','"+req.body.email+"','"+req.body.password+"')", (req,res) => {
+        connection.query(insertRegisterQuery)
             if (err) throw err;
                 console.log("Inserted user data!");
             res.end();
@@ -76,8 +107,9 @@ app.post('/register', (req,res) => {
                 console.log("Inserted owner data!");
             res.end();
         });
-    }
-});
+    }*/
+
+})
 
 app.post('/login', (req, res) => {
     console.log("INSIDE LOGIN");

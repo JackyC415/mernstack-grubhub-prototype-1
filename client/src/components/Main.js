@@ -4,6 +4,7 @@ import Navbar from './Navbar/Navbar';
 import Calculate from './Calculate/Calculate';
 import Login from './Login/Login';
 import Register from './Register/Register';
+import Profile from './Profile/Profile';
 
 //Create a Main Component
 class Main extends Component {
@@ -15,6 +16,7 @@ class Main extends Component {
                 <Route path="/calculate" component={Calculate}/>
                 <Route path="/register" component={Register}/>
                 <Route path="/login" component={Login}/>
+                <Route path="/profile" component={Profile}/>
             </div>
         )
     }
