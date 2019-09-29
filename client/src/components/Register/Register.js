@@ -31,7 +31,7 @@ class Register extends Component {
         axios.post('http://localhost:3001/register', data)
             .then(res => {
                 this.setState({output: res.data})
-                this.setState({ name: "", email: "", password: "" });
+                this.setState({ name: "", email: "", password: "", restaurantname: "", zipcode: "" });
         });
     }
 
@@ -76,8 +76,8 @@ class Register extends Component {
         if(this.state.owner) {
             ownerForm = 
             <div>
-                Restaurant Name: <input type="text" name="restaurantname" placeholder="Restaurant name" value={this.state.restaurantname} onChange={this.handleChange}></input><br/>
-                ZipCode: <input type="number" name="zipcode" placeholder="Zipcode" value ={this.state.zipcode} onChange={this.handleChange}></input>
+                Restaurant Name: <input type="text" name="restaurantname" maxlength="30" placeholder="Restaurant name" value={this.state.restaurantname} onChange={this.handleChange} required></input><br/>
+                ZipCode: <input type="number" name="zipcode" minlength="5" maxlength="9" placeholder="Zipcode" value ={this.state.zipcode} onChange={this.handleChange} required></input>
             </div>
             accountType = "User";
         }

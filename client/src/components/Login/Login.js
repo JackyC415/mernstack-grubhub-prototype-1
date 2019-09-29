@@ -37,7 +37,6 @@ class Login extends Component {
                 this.setState({authFlag : true})
             } else {
                 this.setState({authFlag: false})
-                this.setState({email: "", password: ""});
             }
         });
     }
