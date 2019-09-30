@@ -1,3 +1,5 @@
+//References: https://reactstrap.github.io/components/tables/
+
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router';
@@ -10,12 +12,12 @@ class Profile extends Component {
     super(props);
 
     this.state = {
-      name: '',
-      email: '',
-      password: '',
-      phone: 'null',
-      restaurantname: '',
-      zipcode: '',
+      name: null,
+      email: null,
+      password: null,
+      phone: null,
+      restaurantname: null,
+      zipcode: null,
       isInEditMode: false
     }
 
@@ -35,7 +37,7 @@ class Profile extends Component {
     axios.post('/profile')
       .then(res => {
         if (res)
-          this.setState({ name: res.data[0].name });
+        this.setState({ name: res.data[0].name });
         this.setState({ email: res.data[0].email });
         this.setState({ password: res.data[0].password });
         this.setState({ restaurantname: res.data[0].restaurantname });
@@ -74,21 +76,13 @@ class Profile extends Component {
   }
 
   renderProfile = () => {
-    let ownerProfileTD = null;
-    let ownerProfileTH = null;
-    if (cookie.load('cookie') === 'owner') {
-      ownerProfileTD =
-        <div>
-          <td>{this.state.restaurantname}</td>
-          <td>{this.state.zipcode}</td>
-        </div>
-      ownerProfileTH =
-        <div>
-          <th>Restaurant</th>
-          <th>Zipcode</th>
-        </div>
+    let restaurantTH, zipcodeTH, restaurantTD, zipcodeTD = null;
+    if(cookie.load('cookie') === 'owner') {
+        restaurantTH = <th>Restaurant</th>
+        zipcodeTH = <th>Zipcode</th>
+        restaurantTD = <td>{this.state.restaurantname}</td>
+        zipcodeTD = <td>{this.state.zipcode}</td>
     }
-
     return <div class="container">
       <h1>Profile</h1>
       <h3>Note: double click to edit profile.</h3>
@@ -101,7 +95,8 @@ class Profile extends Component {
                 <th>Email</th>
                 <th>Password</th>
                 <th>Phone</th>
-                {ownerProfileTH}
+                {restaurantTH}
+                {zipcodeTH}
               </tr>
             </thead>
             <tbody>
@@ -110,11 +105,13 @@ class Profile extends Component {
                 <td>{this.state.email}</td>
                 <td>{this.state.password}</td>
                 <td>{this.state.phone}</td>
-                {ownerProfileTD}
+                {restaurantTD}
+                {zipcodeTD}
               </tr>
             </tbody>
           </Table>
         </div>
+        <div><Button>Update</Button></div>
       </form>
     </div>
   }

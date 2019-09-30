@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Button } from 'reactstrap';
 
 class Calculator extends Component {
 
@@ -9,9 +10,9 @@ class Calculator extends Component {
         super(props);
         //maintain the state required for this component
         this.state = {
-            firstNum: "",
-            secondNum: "",
-            operation: "",
+            firstNum: null,
+            secondNum: null,
+            operation: null,
             result: 0
         }
 
@@ -73,13 +74,13 @@ class Calculator extends Component {
 
                         <div style={{ width: '30%' }} class="form-group">
                             <input type="number" class="form-control" name="secondNum" placeholder="Second Number" onChange={this.handleChange} required />
-                        </div><br />
+                        </div>
 
                         <div style={{ width: '30%' }}>
-                            <button onClick={this.calculateOperation("add")} class="btn btn-primary" type="button">Add</button>
-                            <button onClick={this.calculateOperation("sub")} class="btn btn-primary" type="button">Sub</button>
-                            <button onClick={this.calculateOperation("mul")} class="btn btn-primary" type="button">Mul</button>
-                            <button onClick={this.calculateOperation("div")} class="btn btn-primary" type="button">Div</button>
+                            <Button onClick={this.calculateOperation("add")}>Add</Button> &nbsp;
+                            <Button onClick={this.calculateOperation("sub")}>Sub</Button> &nbsp;
+                            <Button onClick={this.calculateOperation("mul")}>Mul</Button> &nbsp;
+                            <Button onClick={this.calculateOperation("div")}>Div</Button> &nbsp;
                         </div><br />
                         <div>
                             Result: {this.state.result}

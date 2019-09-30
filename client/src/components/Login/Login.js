@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import axios from 'axios';
 import cookie from 'react-cookies';
+import { Button } from 'reactstrap';
 
 class Login extends Component {
     constructor(props) {
@@ -63,9 +64,9 @@ class Login extends Component {
                         <h1>Login</h1>
                         Email: <input type="email" name="email" placeholder="example@gmail.com" value={this.state.email} onChange={this.handleChange} required></input><br />
                         Password: <input type="password" name="password" placeholder="At least 6 characters" minlength="6" maxlength="16" value={this.state.password} onChange={this.handleChange} required></input><br />
-                        <input type="submit" value="Login"></input><br />
-                        New? <Link to="/register" className="btn btn-link">Create account</Link>
-                        <div> {this.state.output} </div>
+                        <div><Button>Login</Button></div>
+                        <div>New? <Link to="/register">Create account</Link></div>
+                        <div>{this.state.output}</div>
                     </form>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { Button } from 'reactstrap';
 
 class Register extends Component {
     constructor(props) {
@@ -89,9 +90,11 @@ class Register extends Component {
                     Email: <input type="email" name="email" placeholder="example@gmail.com" value={this.state.email} onChange={this.handleChange} required></input><br />
                     Password: <input type="password" name="password" placeholder="At least 6 characters" minlength="6" maxlength="16" id="password" value={this.state.password} onChange={this.handleChange} required></input><br />
                     {ownerForm}
-                    <input type="submit" value="Register"></input><br />
-                    Already have an account? <Link to="/login" className="btn btn-link">Login</Link><br />
-                    <a href='#' onClick={this.switchForm}>Sign Up as {accountType}</a><br />
+                    <div>
+                    <Button>Register</Button> &nbsp;
+                    <Button onClick={this.switchForm}>Sign Up as {accountType}</Button>
+                    </div><br />
+                    <div>Already have an account? <Link to="/login">Login</Link></div><br />
                     <div> {this.state.output} </div>
                 </form>
             </div>
