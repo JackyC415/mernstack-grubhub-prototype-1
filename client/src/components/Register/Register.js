@@ -1,9 +1,9 @@
-import React,{Component} from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 class Register extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -23,16 +23,15 @@ class Register extends Component {
 
     handleChange = (e) => {
         e.preventDefault();
-        this.setState({[e.target.name]: e.target.value});
+        this.setState({ [e.target.name]: e.target.value });
     }
 
     //send registration data to server for processing
     sendRestAPI = (data) => {
         axios.post('http://localhost:3001/register', data)
             .then(res => {
-                this.setState({output: res.data})
-                this.setState({ name: "", email: "", password: "", restaurantname: "", zipcode: "" });
-        });
+                this.setState({ output: res.data })
+            });
     }
 
     handleSubmit = (e) => {
@@ -56,7 +55,7 @@ class Register extends Component {
             owner: true
         }
 
-        if(!this.state.owner) {
+        if (!this.state.owner) {
             this.sendRestAPI(buyerData);
         } else {
             this.sendRestAPI(ownerData);
@@ -66,35 +65,35 @@ class Register extends Component {
 
     //switch between user and owner sign up form
     switchForm = (e) => {
-        (!this.state.owner) ? this.setState({owner: true}) : this.setState({owner: false});
+        (!this.state.owner) ? this.setState({ owner: true }) : this.setState({ owner: false });
     }
 
-    render(){
+    render() {
         var ownerForm = null;
         var accountType = "Owner";
 
-        if(this.state.owner) {
-            ownerForm = 
-            <div>
-                Restaurant Name: <input type="text" name="restaurantname" maxlength="30" placeholder="Restaurant name" value={this.state.restaurantname} onChange={this.handleChange} required></input><br/>
-                ZipCode: <input type="number" name="zipcode" minlength="5" maxlength="9" placeholder="Zipcode" value ={this.state.zipcode} onChange={this.handleChange} required></input>
-            </div>
+        if (this.state.owner) {
+            ownerForm =
+                <div>
+                    Restaurant Name: <input type="text" name="restaurantname" maxlength="30" placeholder="Restaurant name" value={this.state.restaurantname} onChange={this.handleChange} required></input><br />
+                    ZipCode: <input type="number" name="zipcode" maxlength="5" placeholder="5 digits" value={this.state.zipcode} onChange={this.handleChange} required></input>
+                </div>
             accountType = "User";
         }
 
-        return(
+        return (
             <div class="container">
-            <form method = "post">
-            <h1>Create an account</h1>
-                    Name: <input type="text" name="name" placeholder="Your name" minlength="3" maxlength="30" value={this.state.name} onChange = {this.handleChange} required></input><br/>
-                    Email: <input type="email" name="email" placeholder="example@gmail.com" value={this.state.email} onChange = {this.handleChange} required></input><br/>
-                    Password: <input type="password" name="password" placeholder="At least 6 characters" minlength="6" maxlength="16" id="password" value={this.state.password} onChange = {this.handleChange} required></input><br/>
+                <form onSubmit={this.handleSubmit}>
+                    <h1>Create an account</h1>
+                    Name: <input type="text" name="name" placeholder="Your name" minlength="3" maxlength="30" value={this.state.name} onChange={this.handleChange} required></input><br />
+                    Email: <input type="email" name="email" placeholder="example@gmail.com" value={this.state.email} onChange={this.handleChange} required></input><br />
+                    Password: <input type="password" name="password" placeholder="At least 6 characters" minlength="6" maxlength="16" id="password" value={this.state.password} onChange={this.handleChange} required></input><br />
                     {ownerForm}
-                    <input type="submit" name="Register" onClick={this.handleSubmit}></input><br/>
-                    Already have an account? <Link to="/login" className="btn btn-link">Login</Link><br/>
-                    <a href='#' onClick={this.switchForm}>Sign Up as {accountType}</a><br/>
+                    <input type="submit" value="Register"></input><br/>
+                    Already have an account? <Link to="/login" className="btn btn-link">Login</Link><br />
+                    <a href='#' onClick={this.switchForm}>Sign Up as {accountType}</a><br />
                     <div> {this.state.output} </div>
-            </form>
+                </form>
             </div>
         )
     }
