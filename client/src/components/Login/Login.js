@@ -52,14 +52,12 @@ class Login extends Component {
     }
 
     render() {
-        let redirectVar = null;
-        if (cookie.load('cookie') === 'owner') {
-            redirectVar = <Redirect to="/profile" />
-        } else if (cookie.load('cookie') === 'buyer') {
-            redirectVar = <Redirect to="/calculate" />
+        let redirectHome = null;
+        if (cookie.load('cookie')) {
+            redirectHome = <Redirect to="/" />
         }
         return (
-            <div>{redirectVar}
+            <div>{redirectHome}
                 <div class="container">
                     <form onSubmit={this.handleSubmit}>
                         <h1>Login</h1>

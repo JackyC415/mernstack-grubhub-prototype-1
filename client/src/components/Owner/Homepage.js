@@ -1,11 +1,11 @@
-import React,{Component} from 'react';
+import React, { Component } from 'react';
 
 class OwnerHome extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
     }
-    render(){
-        return(
+    render() {
+        return (
             <div>Owner Homepage!</div>
         )
     }

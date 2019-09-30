@@ -1,3 +1,4 @@
+//References: CMPE273 ReactHW, Prof. Shim, Fall 2019.
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -125,7 +126,7 @@ app.post('/login', (req, res) => {
                 throw err;
             } else if (results.length > 0) {
                 console.log(typeof results[0].owner);
-                if(results[0].owner == 0) {
+                if (results[0].owner == 0) {
                     res.cookie('cookie', "buyer", { maxAge: 900000, httpOnly: false, path: '/' });
                 } else {
                     res.cookie('cookie', "owner", { maxAge: 900000, httpOnly: false, path: '/' });
@@ -146,6 +147,7 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/profile', (req, res) => {
+    if (req.session.isLoggedIn) {
         var profileSQL = "SELECT * FROM users WHERE name = ?";
         connection.query(profileSQL, [req.session.name], (err, results) => {
             if (err) {
@@ -156,6 +158,9 @@ app.post('/profile', (req, res) => {
                 console.log("Can't find user!");
             }
         });
+    } else {
+        console.log("Can't access profile if not logged in.");
+    }
 });
 
 app.listen(3001, () => console.log('Server listening on port 3001'));
