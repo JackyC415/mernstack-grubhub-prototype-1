@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router';
 import cookie from 'react-cookies';
+import { Table, Button } from 'reactstrap';
 
 class Profile extends Component {
 
@@ -73,26 +74,47 @@ class Profile extends Component {
   }
 
   renderProfile = () => {
-    let ownerProfileOpts = null;
+    let ownerProfileTD = null;
+    let ownerProfileTH = null;
     if (cookie.load('cookie') === 'owner') {
-      ownerProfileOpts =
+      ownerProfileTD =
         <div>
-          restaurantname: {this.state.restaurantname}<br />
-          Zipcode: {this.state.zipcode}<br />
+          <td>{this.state.restaurantname}</td>
+          <td>{this.state.zipcode}</td>
+        </div>
+      ownerProfileTH =
+        <div>
+          <th>Restaurant</th>
+          <th>Zipcode</th>
         </div>
     }
+
     return <div class="container">
       <h1>Profile</h1>
       <h3>Note: double click to edit profile.</h3>
       <form onSubmit={this.handleSubmit}>
         <div onDoubleClick={this.changeEditMode}>
-          Name: {this.state.name}<br />
-          Email: {this.state.email}<br />
-          Pasword: <br value={this.state.password}></br>
-          Phone: {this.state.phone}<br />
-          {ownerProfileOpts}
+          <Table dark>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Phone</th>
+                {ownerProfileTH}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{this.state.name}</td>
+                <td>{this.state.email}</td>
+                <td>{this.state.password}</td>
+                <td>{this.state.phone}</td>
+                {ownerProfileTD}
+              </tr>
+            </tbody>
+          </Table>
         </div>
-        <input type="submit" value="Update"></input><br />
       </form>
     </div>
   }

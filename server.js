@@ -95,14 +95,24 @@ app.post('/register', (req, res) => {
         const { error, value } = schema.validate({ name: req.body.name, email: req.body.email, password: req.body.password, restaurantname: req.body.restaurantname, zipcode: req.body.zipcode });
         if (error) {
             console.log(err);
-            res.send('Please ensure your inputs are valid.');
+            res.send('Invalid inputs!');
         } else {
-            console.log(value);
-            let userSQL = "INSERT INTO users " + "SET name = ?, email = ?, password = ?, restaurantname = ?, zipcode = ?, owner = ?";
-            connection.query(userSQL, [req.body.name, req.body.email, req.body.password, req.body.restaurantname, req.body.zipcode, req.body.owner]);
-            res.send('Registered successfully!');
-
+            let checkEmail = "SELECT email FROM users WHERE email = ?";
+            connection.query(checkEmail, [req.body.email], (err, results) => {
+                if (err) {
+                    throw err;
+                } else if (results.length > 0) {
+                    res.send('User already exists!');
+                } else {
+                    console.log(value);
+                    let userSQL = "INSERT INTO users " + "SET name = ?, email = ?, password = ?, restaurantname = ?, zipcode = ?, owner = ?";
+                    connection.query(userSQL, [req.body.name, req.body.email, req.body.password, req.body.restaurantname, req.body.zipcode, req.body.owner]);
+                    res.send('Registered successfully!');
+                }
+            });
         }
+    } else {
+        console.log("Can't register when user is logged in.");
     }
 });
 
