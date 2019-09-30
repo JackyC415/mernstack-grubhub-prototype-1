@@ -77,7 +77,7 @@ class Register extends Component {
             ownerForm =
                 <div>
                     Restaurant Name: <input type="text" name="restaurantname" maxlength="30" placeholder="Restaurant name" value={this.state.restaurantname} onChange={this.handleChange} required></input><br />
-                    ZipCode: <input type="number" name="zipcode" maxlength="5" placeholder="5 digits" value={this.state.zipcode} onChange={this.handleChange} required></input>
+                    ZipCode: <input type="text" pattern="\d*" name="zipcode" minlength="5" maxlength="5" placeholder="5 digits" value={this.state.zipcode} onChange={this.handleChange} required></input>
                 </div>
             accountType = "User";
         }
@@ -93,8 +93,8 @@ class Register extends Component {
                     <div>
                     <Button>Register</Button> &nbsp;
                     <Button onClick={this.switchForm}>Sign Up as {accountType}</Button>
-                    </div><br />
-                    <div>Already have an account? <Link to="/login">Login</Link></div><br />
+                    </div>
+                    <div>Already have an account? <Link to="/login">Login</Link></div>
                     <div> {this.state.output} </div>
                 </form>
             </div>
