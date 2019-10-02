@@ -94,7 +94,7 @@ app.post('/register', (req, res) => {
     if (!req.session.isLoggedIn) {
         const { error, value } = schema.validate({ name: req.body.name, email: req.body.email, password: req.body.password, restaurantname: req.body.restaurantname, zipcode: req.body.zipcode });
         if (error) {
-            console.log(err);
+            console.log(error);
             res.send('Invalid inputs!');
         } else {
             let checkEmail = "SELECT email FROM users WHERE email = ?";
@@ -169,7 +169,7 @@ app.post('/profile', (req, res) => {
             }
         });
     } else {
-        console.log("Can't access profile if not logged in.");
+        console.log("Please log in first!");
     }
 });
 
