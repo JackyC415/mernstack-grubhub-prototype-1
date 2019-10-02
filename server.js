@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const Joi = require('@hapi/joi');
 const mysql = require('mysql');
+const http = require('http');
 
 app.set('view engine', 'ejs');
 //use cors to allow cross origin resource sharing
@@ -172,5 +173,11 @@ app.post('/profile', (req, res) => {
         console.log("Please log in first!");
     }
 });
+
+app.post('/searchItem' , (req,res) => {
+    //query database for item
+    console.log(req.body.item);
+    res.sendStatus(200);
+})
 
 app.listen(3001, () => console.log('Server listening on port 3001'));
