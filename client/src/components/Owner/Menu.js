@@ -65,7 +65,7 @@ class OwnerMenu extends Component {
                                     className={classnames({ active: this.state.activeTab === '4' })}
                                     onClick={() => { this.toggle('4'); }}
                                 >
-                                    Dinner
+                                    Appetizer
                         </NavLink>
                             </NavItem>
                         </Nav>
@@ -84,7 +84,7 @@ class OwnerMenu extends Component {
                                                     <Input type="number" name="price_name" id="price_id" placeholder="Price of the item" />
                                                 </FormGroup>
                                                 <FormGroup>
-                                                    <Label for="itemCuisine">Custom Select</Label>
+                                                    <Label for="itemCuisine">Cuisine</Label>
                                                     <CustomInput type="select" id="cuisine_id" name="cuisine_name">
                                                         <option value="">Select</option>
                                                         <option>American</option>
@@ -148,7 +148,7 @@ class OwnerMenu extends Component {
                             <TabPane tabId="3">
                                 Hello
                             </TabPane>
-                            
+
                             <TabPane tabId="4">
                                 Yeet
                             </TabPane>

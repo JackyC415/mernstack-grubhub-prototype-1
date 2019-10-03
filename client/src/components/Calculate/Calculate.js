@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Button } from 'reactstrap';
 
 class Calculator extends Component {
 
-    //call the constructor method
     constructor(props) {
-        //Call the constrictor of Super class i.e The Component
         super(props);
-        //maintain the state required for this component
+        
         this.state = {
             firstNum: null,
             secondNum: null,
@@ -28,21 +25,21 @@ class Calculator extends Component {
     sendRestAPI = (data) => {
         axios.post('http://localhost:3001/calculate', data)
             .then(res => {
-                this.setState({ result: res.data })
+                this.setState(res.data)
             });
     }
 
-    calculateOperation = (param) => e => {
+    calculateOperation = (e) => {
         e.preventDefault();
 
         const data = {
             firstNum: this.state.firstNum,
             secondNum: this.state.secondNum,
-            operation: param,
+            operation: this.state.operation,
             result: this.state.result
         }
 
-        switch (param) {
+        switch (this.state.operation) {
             case "add":
                 this.sendRestAPI(data);
                 break;
@@ -67,7 +64,7 @@ class Calculator extends Component {
                 <br />
                 <div class="container">
                     <h1>Calculator</h1>
-                    <form action="http://127.0.0.1:3001/calculate" method="post">
+                    <form onSubmit={this.calculateOperation}>
                         <div style={{ width: '30%' }} class="form-group">
                             <input type="number" class="form-control" name="firstNum" placeholder="First Number" onChange={this.handleChange} required />
                         </div><br />
@@ -77,10 +74,10 @@ class Calculator extends Component {
                         </div>
 
                         <div style={{ width: '30%' }}>
-                            <Button onClick={this.calculateOperation("add")}>Add</Button> &nbsp;
-                            <Button onClick={this.calculateOperation("sub")}>Sub</Button> &nbsp;
-                            <Button onClick={this.calculateOperation("mul")}>Mul</Button> &nbsp;
-                            <Button onClick={this.calculateOperation("div")}>Div</Button> &nbsp;
+                            <input name="operation" onClick={this.handleChange} type="submit" value="add"></input> &nbsp;
+                            <input name="operation" onClick={this.handleChange} type="submit" value="sub"></input> &nbsp;
+                            <input name="operation" onClick={this.handleChange} type="submit" value="mul"></input> &nbsp;
+                            <input name="operation" onClick={this.handleChange} type="submit" value="div"></input> &nbsp;
                         </div><br />
                         <div>
                             Result: {this.state.result}

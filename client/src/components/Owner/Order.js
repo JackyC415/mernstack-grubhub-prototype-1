@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 
-class OwnerOrder extends Component {
+class Ownerorder extends Component {
     constructor(props) {
         super(props);
+
     }
+
     render() {
         return (
-            <div>Owner Order!</div>
-        )
+            <div>Owner Order!
+            </div>
+        );
     }
+
 }
 
-export default OwnerOrder;
+
+export default Ownerorder;

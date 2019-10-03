@@ -20,7 +20,6 @@ class Profile extends Component {
       zipcode: null,
       isInEditMode: false
     }
-
     this.getProfile = this.getProfile.bind(this);
   }
 

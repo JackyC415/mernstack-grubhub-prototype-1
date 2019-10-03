@@ -6,7 +6,6 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const Joi = require('@hapi/joi');
 const mysql = require('mysql');
-const http = require('http');
 
 app.set('view engine', 'ejs');
 //use cors to allow cross origin resource sharing
@@ -56,22 +55,23 @@ app.post('/calculate', (req, res) => {
     console.log("INSIDE CALCULATE");
     console.log(req.body);
 
-    var firstNum = parseInt(req.body.firstNum);
-    var secondNum = parseInt(req.body.secondNum);
-
+    var {firstNum, secondNum, result} = req.body;
     switch (req.body.operation) {
         case "add":
-            res.status(200).send(JSON.stringify(firstNum + secondNum));
+            result = JSON.stringify(parseInt(firstNum) + parseInt(secondNum));
+            res.status(200).send({result: result});
             break;
         case "sub":
-            res.status(200).send(JSON.stringify(firstNum - secondNum));
+            result = JSON.stringify(parseInt(firstNum) - parseInt(secondNum));
+            res.status(200).send({result: result});
             break;
         case "mul":
-            res.status(200).send(JSON.stringify(firstNum * secondNum));
+            result = JSON.stringify(parseInt(firstNum) * parseInt(secondNum));
+            res.status(200).send({result: result});
             break;
         case "div":
-            var ans = (secondNum != 0 ? JSON.stringify(firstNum / secondNum) : 'Infinity');
-            res.status(200).send(ans);
+            result = (parseInt(secondNum) != 0 ? JSON.stringify(parseInt(firstNum) / parseInt(secondNum)) : 'Infinity');
+            res.status(200).send({result: result});
             break;
         default:
             res.status(404).send(null);
@@ -136,7 +136,6 @@ app.post('/login', (req, res) => {
             if (err) {
                 throw err;
             } else if (results.length > 0) {
-                console.log(typeof results[0].owner);
                 if (results[0].owner == 0) {
                     res.cookie('cookie', "buyer", { maxAge: 900000, httpOnly: false, path: '/' });
                 } else {
@@ -174,10 +173,12 @@ app.post('/profile', (req, res) => {
     }
 });
 
-app.post('/searchItem' , (req,res) => {
+app.post('/searchItem', (req, res) => {
     //query database for item
     console.log(req.body.item);
     res.sendStatus(200);
 })
+
+module.exports = app;
 
 app.listen(3001, () => console.log('Server listening on port 3001'));
