@@ -179,6 +179,24 @@ app.post('/searchItem', (req, res) => {
     res.sendStatus(200);
 })
 
+app.post('/addOrder', (req, res) => {
+    //query database for item
+    console.log(req.body);
+    res.sendStatus(200);
+})
+
+app.post('/updateOrder', (req, res) => {
+    //query database for item
+    console.log(req.body);
+    res.sendStatus(200);
+})
+
+app.post('/deleteOrder', (req, res) => {
+    //query database for item
+    console.log(req.body);
+    res.sendStatus(200);
+})
+
 module.exports = app;
 
 app.listen(3001, () => console.log('Server listening on port 3001'));
