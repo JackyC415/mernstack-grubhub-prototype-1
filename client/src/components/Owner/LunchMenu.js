@@ -8,12 +8,12 @@ import axios from 'axios';
 
 export const sampleProducts = [];
 
-class Ownerorder extends Component {
+class LunchMenu extends Component {
     editField = "inEdit";
     CommandCell;
-    
+
     state = {
-        data: [...sampleProducts],
+        data: [ ...sampleProducts ],
         ownerID: null
     };
 
@@ -35,109 +35,106 @@ class Ownerorder extends Component {
     }
 
     componentDidMount() {
-      axios.get('/getOwnerMenu')
-      .then(res => {
-        if (res) {
-            for(var i = 0; i < res.data.length; i++) {
-            this.state.data.push(res.data[i]);
-            }
-            this.setState({ ownerID: res.data[0].menu_owner});
-        }
-      }).catch((err) => {
-        throw err;
-      })
-
-    }
-
-    addOrderAPI = (data) => {
-        axios.post('http://localhost:3001/addOrder', data)
-            .then(res => {
-                console.log("Added " + res.data);
-            });
-    }
-
-    updateOrderAPI = (data) => {
-        axios.post('http://localhost:3001/updateOrder', data)
-            .then(res => {
-                console.log("Updated " + res.data);
-            });
-    }
-
-    deleteOrderAPI = (data) => {
-        axios.post('http://localhost:3001/deleteOrder', data)
-            .then(res => {
-                console.log("Deleted " + res.data);
-            });
-    }
+        axios.get('/getOwnerMenu')
+        .then(res => {
+          if (res) {
+              for(var i = 0; i < res.data.length; i++) {
+              console.log(res.data[i]);
+              }
+              this.setState({ ownerID: res.data[0].menu_owner});
+          }
+        }).catch((err) => {
+          throw err;
+        })
+  
+      }
+  
+      addOrderAPI = (data) => {
+          axios.post('http://localhost:3001/addOrder', data)
+              .then(res => {
+                  console.log("Added!");
+              });
+      }
+  
+      updateOrderAPI = (data) => {
+          axios.post('http://localhost:3001/updateOrder', data)
+              .then(res => {
+                  console.log("Updated!");
+              });
+      }
+  
+      deleteOrderAPI = (data) => {
+          axios.post('http://localhost:3001/deleteOrder', data)
+              .then(res => {
+                  console.log("Deleted!");
+              });
+      }
 
     enterEdit = (dataItem) => {
         this.setState({
             data: this.state.data.map(item =>
-                item.id === dataItem.id ?
-                    { ...item, inEdit: true } : item
+                item.ProductID === dataItem.ProductID ?
+                { ...item, inEdit: true } : item
             )
         });
     }
 
     remove = (dataItem) => {
-        const data = [...this.state.data];
-        dataItem.menu = "Breakfast";
+        const data = [ ...this.state.data ];
+        dataItem.menu = "Lunch";
         dataItem.ownerID = this.state.ownerID;
         this.removeItem(data, dataItem);
         this.removeItem(sampleProducts, dataItem);
-        
-        this.setState({ data });
-        this.deleteOrderAPI(dataItem);
 
-        console.log(dataItem);
+        this.setState({ data });
+
+        this.deleteOrderAPI(dataItem);
     }
 
     add = (dataItem) => {
         dataItem.inEdit = undefined;
-        dataItem.id = this.generateId(sampleProducts);
-        dataItem.menu = "Breakfast";
+        dataItem.ProductID = this.generateId(sampleProducts);
+        dataItem.menu = "Lunch";
         dataItem.ownerID = this.state.ownerID;
 
         sampleProducts.unshift(dataItem);
         this.setState({
-            data: [...this.state.data],
+            data: [ ...this.state.data ]
         });
 
         this.addOrderAPI(dataItem);
-
     }
 
     discard = (dataItem) => {
-        const data = [...this.state.data];
+        const data = [ ...this.state.data ];
         this.removeItem(data, dataItem);
 
         this.setState({ data });
     }
 
     update = (dataItem) => {
-        const data = [...this.state.data];
-        dataItem.menu = "Breakfast";
-        dataItem.ownerID = this.state.ownerID;
+        const data = [ ...this.state.data ];
         const updatedItem = { ...dataItem, inEdit: undefined };
+        dataItem.menu = "Lunch";
+        dataItem.ownerID = this.state.ownerID;
 
         this.updateItem(data, updatedItem);
         this.updateItem(sampleProducts, updatedItem);
 
         this.setState({ data });
-        console.log(dataItem);
 
         this.updateOrderAPI(dataItem);
     }
 
     cancel = (dataItem) => {
-        const originalItem = sampleProducts.find(p => p.id === dataItem.id);
-        const data = this.state.data.map(item => item.id === originalItem.id ? originalItem : item);
+        const originalItem = sampleProducts.find(p => p.ProductID === dataItem.ProductID);
+        const data = this.state.data.map(item => item.ProductID === originalItem.ProductID ? originalItem : item);
 
         this.setState({ data });
     }
 
     updateItem = (data, item) => {
-        let index = data.findIndex(p => p === item || (item.id && p.id === item.id));
+        let index = data.findIndex(p => p === item || (item.ProductID && p.ProductID === item.ProductID));
         if (index >= 0) {
             data[index] = { ...item };
         }
@@ -145,8 +142,8 @@ class Ownerorder extends Component {
 
     itemChange = (event) => {
         const data = this.state.data.map(item =>
-            item.id === event.dataItem.id ?
-                { ...item, [event.field]: event.value } : item
+            item.ProductID === event.dataItem.ProductID ?
+            { ...item, [event.field]: event.value } : item
         );
 
         this.setState({ data });
@@ -156,12 +153,12 @@ class Ownerorder extends Component {
         const newDataItem = { inEdit: true };
 
         this.setState({
-            data: [newDataItem, ...this.state.data]
+            data: [ newDataItem, ...this.state.data ]
         });
     }
 
     cancelCurrentChanges = () => {
-        this.setState({ data: [...sampleProducts] });
+        this.setState({ data: [ ...sampleProducts ] });
     }
 
     render() {
@@ -174,13 +171,6 @@ class Ownerorder extends Component {
                 onItemChange={this.itemChange}
                 editField={this.editField}
             >
-                <Column field="id" title="Id" width="50px" editable={false} />
-                <Column field="p_name" title="Name" />
-                <Column field="p_description" title="Description" />
-                <Column field="p_image" title="Image" />
-                <Column field="p_quantity" title="Quantity" />
-                <Column field="p_price" title="Price" />
-                <Column cell={this.CommandCell} width="240px" />
                 <GridToolbar>
                     <button
                         title="Add new"
@@ -199,18 +189,25 @@ class Ownerorder extends Component {
                         </button>
                     )}
                 </GridToolbar>
+                <Column field="ProductID" title="Id" width="50px" editable={false} />
+                <Column field="p_name" title="Name" />
+                <Column field="p_description" title="Description" />
+                <Column field="p_image" title="Image" />
+                <Column field="p_quantity" title="Quantity" width="150px" editor="numeric" />
+                <Column field="p_price" title="Price" />
+                <Column cell={this.CommandCell} width="240px" />
             </Grid>
         );
     }
 
-    generateId = data => data.reduce((acc, current) => Math.max(acc, current.id), 0) + 1;
+    generateId = data => data.reduce((acc, current) => Math.max(acc, current.ProductID), 0) + 1;
 
     removeItem(data, item) {
-        let index = data.findIndex(p => p === item || item.id && p.id === item.id);
+        let index = data.findIndex(p => p === item || item.ProductID && p.ProductID === item.ProductID);
         if (index >= 0) {
             data.splice(index, 1);
         }
     }
 }
 
-export default Ownerorder;
+export default LunchMenu;

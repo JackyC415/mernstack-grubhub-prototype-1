@@ -1,9 +1,9 @@
 import React, { Component }  from 'react';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
-import Order from './Order';
-import Order2 from './Order2';
-import Order3 from './Order3';
+import BreakfastMenu from './BreakfastMenu';
+import LunchMenu from './LunchMenu';
+import AppetizerMenu from './AppetizerMenu';
 
 class OwnerMenu extends Component {
   constructor(props) {
@@ -32,7 +32,7 @@ class OwnerMenu extends Component {
               className={classnames({ active: this.state.activeTab === '1' })}
               onClick={() => { this.toggle('1'); }}
             >
-              Tab1
+              Breakfast
             </NavLink>
           </NavItem>
 
@@ -41,7 +41,7 @@ class OwnerMenu extends Component {
               className={classnames({ active: this.state.activeTab === '2' })}
               onClick={() => { this.toggle('2'); }}
             >
-              Tab2
+              Lunch
             </NavLink>
           </NavItem>
 
@@ -50,7 +50,7 @@ class OwnerMenu extends Component {
               className={classnames({ active: this.state.activeTab === '3' })}
               onClick={() => { this.toggle('3'); }}
             >
-              Tab3
+              Appetizer
             </NavLink>
           </NavItem>
 
@@ -59,7 +59,7 @@ class OwnerMenu extends Component {
           <TabPane tabId="1">
             <Row>
               <Col sm="12">
-                <h4><Order /></h4>
+                <h4><BreakfastMenu/></h4>
               </Col>
             </Row>
           </TabPane>
@@ -67,7 +67,7 @@ class OwnerMenu extends Component {
           <TabPane tabId="2">
             <Row>
               <Col sm="12">
-                <h4><Order2 /></h4>
+                <h4><LunchMenu/></h4>
               </Col>
             </Row>
           </TabPane>
@@ -75,7 +75,7 @@ class OwnerMenu extends Component {
            <TabPane tabId="3">
             <Row>
               <Col sm="12">
-                <h4><Order3 /></h4>
+                <h4><AppetizerMenu/></h4>
               </Col>
             </Row>
           </TabPane>

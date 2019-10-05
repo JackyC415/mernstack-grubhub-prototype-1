@@ -7,9 +7,9 @@ import Register from './Register/Register';
 import Profile from './Profile/Profile';
 import Buyerhome from './Buyer/Homepage';
 import Ownerhome from './Owner/Homepage';
-import Ownerorder from './Owner/Order';
-import Ownermenu from './Owner/Menu';
 import BuyerSearch from './Buyer/Search';
+import BreakfastMenu from './Owner/BreakfastMenu';
+import OwnerMenu from './Owner/Menu';
 
 //Create a Main Component
 class Main extends Component {
@@ -25,8 +25,8 @@ class Main extends Component {
                 <Route path="/buyerhome" component={Buyerhome} />
                 <Route path="/buyerhome/search" component={BuyerSearch} />
                 <Route path="/ownerhome" component={Ownerhome} />
-                <Route path="/ownerhome/order" component={Ownerorder} />
-                <Route path="/ownerhome/menu" component={Ownermenu} />
+                <Route path="/ownerhome/order" component={BreakfastMenu} />
+                <Route path="/ownerhome/menu" component={OwnerMenu} />
             </div>
         )
     }
