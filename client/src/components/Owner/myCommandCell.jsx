@@ -6,7 +6,7 @@ export function MyCommandCell({ edit, remove, add, update, discard, cancel, edit
         render() {
             const { dataItem } = this.props;
             const inEdit = dataItem[editField];
-            const isNewItem = dataItem.ProductID === undefined;
+            const isNewItem = dataItem.p_id === undefined;
 
             return inEdit ? (
                 <td className="k-command-cell">
@@ -34,7 +34,7 @@ export function MyCommandCell({ edit, remove, add, update, discard, cancel, edit
                     <button
                         className="k-button k-grid-remove-command"
                         // eslint-disable-next-line no-restricted-globals
-                        onClick={() => confirm('Confirm deleting: ' + dataItem.OrderName) &&
+                        onClick={() => confirm('Confirm deleting: ' + dataItem.p_name) &&
                             remove(dataItem)
                         }
                     >

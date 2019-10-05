@@ -6,15 +6,15 @@ import '@progress/kendo-theme-default/dist/all.css';
 import { MyCommandCell } from './myCommandCell.jsx';
 import axios from 'axios';
 
-export const sampleProducts = [];
+const sampleProducts3 = [];
 
 class Ownerorder extends Component {
     editField = "inEdit";
     CommandCell;
-    
+
     state = {
-        data: [...sampleProducts],
-        ownerID: null
+        menu: "Appetizer",
+        data: [...sampleProducts3]
     };
 
     constructor(props) {
@@ -32,21 +32,6 @@ class Ownerorder extends Component {
 
             editField: this.editField
         });
-    }
-
-    componentDidMount() {
-      axios.get('/getOwnerMenu')
-      .then(res => {
-        if (res) {
-            for(var i = 0; i < res.data.length; i++) {
-            this.state.data.push(res.data[i]);
-            }
-            this.setState({ ownerID: res.data[0].menu_owner});
-        }
-      }).catch((err) => {
-        throw err;
-      })
-
     }
 
     addOrderAPI = (data) => {
@@ -73,7 +58,7 @@ class Ownerorder extends Component {
     enterEdit = (dataItem) => {
         this.setState({
             data: this.state.data.map(item =>
-                item.id === dataItem.id ?
+                item.ProductID === dataItem.ProductID ?
                     { ...item, inEdit: true } : item
             )
         });
@@ -81,26 +66,21 @@ class Ownerorder extends Component {
 
     remove = (dataItem) => {
         const data = [...this.state.data];
-        dataItem.menu = "Breakfast";
-        dataItem.ownerID = this.state.ownerID;
         this.removeItem(data, dataItem);
-        this.removeItem(sampleProducts, dataItem);
-        
-        this.setState({ data });
-        this.deleteOrderAPI(dataItem);
+        this.removeItem(sampleProducts3, dataItem);
 
-        console.log(dataItem);
+        this.setState({ data });
+
+        this.deleteOrderAPI(dataItem);
     }
 
     add = (dataItem) => {
         dataItem.inEdit = undefined;
-        dataItem.id = this.generateId(sampleProducts);
-        dataItem.menu = "Breakfast";
-        dataItem.ownerID = this.state.ownerID;
+        dataItem.ProductID = this.generateId(sampleProducts3);
 
-        sampleProducts.unshift(dataItem);
+        sampleProducts3.unshift(dataItem);
         this.setState({
-            data: [...this.state.data],
+            data: [...this.state.data]
         });
 
         this.addOrderAPI(dataItem);
@@ -116,12 +96,10 @@ class Ownerorder extends Component {
 
     update = (dataItem) => {
         const data = [...this.state.data];
-        dataItem.menu = "Breakfast";
-        dataItem.ownerID = this.state.ownerID;
         const updatedItem = { ...dataItem, inEdit: undefined };
 
         this.updateItem(data, updatedItem);
-        this.updateItem(sampleProducts, updatedItem);
+        this.updateItem(sampleProducts3, updatedItem);
 
         this.setState({ data });
         console.log(dataItem);
@@ -130,14 +108,14 @@ class Ownerorder extends Component {
     }
 
     cancel = (dataItem) => {
-        const originalItem = sampleProducts.find(p => p.id === dataItem.id);
-        const data = this.state.data.map(item => item.id === originalItem.id ? originalItem : item);
+        const originalItem = sampleProducts3.find(p => p.ProductID === dataItem.ProductID);
+        const data = this.state.data.map(item => item.ProductID === originalItem.ProductID ? originalItem : item);
 
         this.setState({ data });
     }
 
     updateItem = (data, item) => {
-        let index = data.findIndex(p => p === item || (item.id && p.id === item.id));
+        let index = data.findIndex(p => p === item || (item.ProductID && p.ProductID === item.ProductID));
         if (index >= 0) {
             data[index] = { ...item };
         }
@@ -145,7 +123,7 @@ class Ownerorder extends Component {
 
     itemChange = (event) => {
         const data = this.state.data.map(item =>
-            item.id === event.dataItem.id ?
+            item.ProductID === event.dataItem.ProductID ?
                 { ...item, [event.field]: event.value } : item
         );
 
@@ -161,7 +139,7 @@ class Ownerorder extends Component {
     }
 
     cancelCurrentChanges = () => {
-        this.setState({ data: [...sampleProducts] });
+        this.setState({ data: [...sampleProducts3] });
     }
 
     render() {
@@ -174,13 +152,12 @@ class Ownerorder extends Component {
                 onItemChange={this.itemChange}
                 editField={this.editField}
             >
-                <Column field="id" title="Id" width="50px" editable={false} />
-                <Column field="p_name" title="Name" />
-                <Column field="p_description" title="Description" />
-                <Column field="p_image" title="Image" />
-                <Column field="p_quantity" title="Quantity" />
-                <Column field="p_price" title="Price" />
-                <Column cell={this.CommandCell} width="240px" />
+                <Column field="ProductID" title="Id" width="50px" editable={false} />
+                <Column field="ProductName" title="Name" />
+                <Column field="ProductDescription" title="Description" />
+                <Column field="ProductImage" title="Image" />
+                <Column field="ProductQuantity" title="Quantity" />
+                <Column field="ProductPrice" title="Price" />
                 <GridToolbar>
                     <button
                         title="Add new"
@@ -203,10 +180,10 @@ class Ownerorder extends Component {
         );
     }
 
-    generateId = data => data.reduce((acc, current) => Math.max(acc, current.id), 0) + 1;
+    generateId = data => data.reduce((acc, current) => Math.max(acc, current.ProductID), 0) + 1;
 
     removeItem(data, item) {
-        let index = data.findIndex(p => p === item || item.id && p.id === item.id);
+        let index = data.findIndex(p => p === item || item.ProductID && p.ProductID === item.ProductID);
         if (index >= 0) {
             data.splice(index, 1);
         }

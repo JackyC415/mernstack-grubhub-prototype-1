@@ -42,10 +42,15 @@ const connection = mysql.createConnection({
 connection.connect((err) => {
     if (err) throw err;
     console.log('MySQL database connected!');
-    var registerSQL = "CREATE TABLE IF NOT EXISTS users(id INT(11) AUTO_INCREMENT PRIMARY KEY NOT NULL, name VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL, password VARCHAR(255) NOT NULL, restaurantname VARCHAR(255) NOT NULL, zipcode VARCHAR(100) NOT NULL, owner BOOLEAN)";
-    connection.query(registerSQL, function (err, result) {
+    let userSQL = "CREATE TABLE IF NOT EXISTS users(id INT(11) AUTO_INCREMENT PRIMARY KEY NOT NULL, name VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL, password VARCHAR(255) NOT NULL, restaurantname VARCHAR(255) NOT NULL, zipcode VARCHAR(100) NOT NULL, owner BOOLEAN)";
+    let menuSQL = "CREATE TABLE IF NOT EXISTS menu(id INT(11) AUTO_INCREMENT PRIMARY KEY NOT NULL, p_name VARCHAR(100) NOT NULL, p_description VARCHAR(100) NOT NULL, p_image VARCHAR(255) NOT NULL, p_quantity VARCHAR(255) NOT NULL, p_price VARCHAR(100) NOT NULL, menu_section VARCHAR(100) NOT NULL, menu_owner VARCHAR(100) NOT NULL)";
+    connection.query(userSQL, function (err, result) {
         if (err) throw err;
-        console.log("User table created!");
+            console.log("User table created!");
+    });
+    connection.query(menuSQL, function (err, result) {
+        if (err) throw err;
+            console.log("User table created!");
     });
 
 });
@@ -141,8 +146,11 @@ app.post('/login', (req, res) => {
                 } else {
                     res.cookie('cookie', "owner", { maxAge: 900000, httpOnly: false, path: '/' });
                 }
-                req.session.name = results[0].name;
+                req.session.email = results[0].email;
+                req.session.ID = results[0].id;
                 req.session.isLoggedIn = true;
+                console.log(req.session.email);
+                console.log(req.session.ID);
                 res.writeHead(200, {
                     'Content-Type': 'text/plain'
                 })
@@ -158,14 +166,14 @@ app.post('/login', (req, res) => {
 
 app.post('/profile', (req, res) => {
     if (req.session.isLoggedIn) {
-        var profileSQL = "SELECT * FROM users WHERE name = ?";
-        connection.query(profileSQL, [req.session.name], (err, results) => {
+        var profileSQL = "SELECT * FROM users WHERE email = ?";
+        connection.query(profileSQL, [req.session.email], (err, results) => {
             if (err) {
                 throw err;
             } else if (results.length > 0) {
                 res.send(results);
             } else {
-                console.log("Can't find user!");
+                console.log("Can't find user for profile page!");
             }
         });
     } else {
@@ -195,6 +203,24 @@ app.post('/deleteOrder', (req, res) => {
     //query database for item
     console.log(req.body);
     res.sendStatus(200);
+})
+
+app.get('/getOwnerMenu', (req,res) => {
+    console.log("INSIDE OWNER MENU")
+    if (req.session.isLoggedIn) {
+        var ownerMenu = "SELECT * FROM menu WHERE menu_owner = ?";
+        connection.query(ownerMenu, [req.session.ID], (err, results) => {
+            if (err) {
+                throw err;
+            } else if (results.length > 0) {
+                res.send(results);
+            } else {
+                console.log("Can't find owner menu!");
+            }
+        });
+    } else {
+        console.log("Please log in first!");
+    }
 })
 
 module.exports = app;

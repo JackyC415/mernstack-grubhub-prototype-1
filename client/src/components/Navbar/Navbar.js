@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
+import { sampleProducts } from '../Owner/Order';
+
 import {
     Collapse,
     Navbar,
@@ -25,7 +27,8 @@ class NavbarPage extends Component {
         };
     }
     handleLogout = () => {
-        cookie.remove('cookie', { path: '/' })
+        sampleProducts.length = 0;
+        cookie.remove('cookie', { path: '/' });
     }
     toggle() {
         this.setState({
@@ -33,7 +36,7 @@ class NavbarPage extends Component {
         });
     }
     render() {
-        let main = null;
+        let main = null;    
         if (cookie.load('cookie')) {
             main = (
                 <div>
