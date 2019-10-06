@@ -4,7 +4,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
-import { sampleProducts } from '../Owner/BreakfastMenu';
+import { breakfastItems } from '../Owner/BreakfastMenu';
+import { lunchItems } from '../Owner/LunchMenu';
+import { appetizerItems } from '../Owner/AppetizerMenu';
 
 import {
     Collapse,
@@ -25,8 +27,11 @@ class NavbarPage extends Component {
             isOpen: false
         };
     }
+    //empty UI menu table upon logout & delete cookie.
     handleLogout = () => {
-        sampleProducts.length = 0;
+        breakfastItems.length = 0;
+        lunchItems.length = 0;
+        appetizerItems.length = 0;
         cookie.remove('cookie', { path: '/' });
     }
     toggle() {

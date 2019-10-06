@@ -1,4 +1,7 @@
-//References: CMPE273 ReactHW, Prof. Shim, Fall 2019.
+/*References: CMPE273 ReactHW, Prof. Shim, Fall 2019
+https://reactstrap.github.io/components/tabs/
+https://www.telerik.com/kendo-react-ui/components/grid/editing/editing-external-form/
+*/
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -257,7 +260,7 @@ app.post('/filter', (req, res) => {
 })
 
 app.get('/getOwnerMenu/breakfast', (req,res) => {
-    console.log("INSIDE OWNER MENU")
+    console.log("INSIDE BREAKFAST OWNER MENU")
     if (req.session.isLoggedIn) {
         let ownerMenu = "SELECT * FROM menus WHERE menu_owner = ? AND menu_section = 'Breakfast'";
         connection.query(ownerMenu, [req.session.ID], (err, results) => {
@@ -275,7 +278,7 @@ app.get('/getOwnerMenu/breakfast', (req,res) => {
 })
 
 app.get('/getOwnerMenu/lunch', (req,res) => {
-    console.log("INSIDE OWNER MENU")
+    console.log("INSIDE LUNCH OWNER MENU")
     if (req.session.isLoggedIn) {
         let ownerMenu = "SELECT * FROM menus WHERE menu_owner = ? AND menu_section = 'Lunch'";
         connection.query(ownerMenu, [req.session.ID], (err, results) => {

@@ -6,17 +6,17 @@ import DialogContainer from './DialogContainer.jsx';
 import cellWithEditing from './cellWithEditing.jsx';
 import axios from 'axios';
 
-export const lunchItems = [];
+export const appetizerItems = [];
 class LunchMenu extends Component {
     state = {
-        products: lunchItems.slice(0, 7),
+        products: appetizerItems.slice(0, 7),
         productInEdit: undefined,
         ownerID: null,
         itemID: null
     };
 
     componentDidMount() {
-        axios.get('/getOwnerMenu/lunch')
+        axios.get('/getOwnerMenu/appetizer')
             .then(res => {
                 if (res) {
                     console.log(res.data);
@@ -27,7 +27,6 @@ class LunchMenu extends Component {
                     } else {
                         this.state.products.push(res.data[0]);
                     }
-                    //this.state.products.push(res.data[0]);
                     this.setState({ ownerID: res.data[0].menu_owner });
                     this.setState({ itemID: res.data[0].p_id })
                 }

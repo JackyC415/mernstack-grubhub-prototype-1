@@ -1,4 +1,4 @@
-
+//References: https://www.telerik.com/kendo-react-ui/components/grid/editing/editing-external-form/
 import React, { Component } from 'react';
 import { Grid, GridColumn as Column, GridToolbar } from '@progress/kendo-react-grid';
 import '@progress/kendo-theme-default/dist/all.css';
@@ -6,10 +6,10 @@ import DialogContainer from './DialogContainer.jsx';
 import cellWithEditing from './cellWithEditing.jsx';
 import axios from 'axios';
 
-export const sampleProducts = [];
+export const breakfastItems = [];
 class BreakfastMenu extends Component {
     state = {
-        products: sampleProducts.slice(0, 7),
+        products: breakfastItems.slice(0, 7),
         productInEdit: undefined,
         ownerID: null,
         itemID: null
@@ -20,12 +20,16 @@ class BreakfastMenu extends Component {
             .then(res => {
                 if (res) {
                     console.log(res.data);
-                    for(var i = 0; i < res.data.length; i++) {
-                        this.state.products.push(res.data[i]);
+                    if (res.data.length > 1) {
+                        for (var i = 0; i < res.data.length; i++) {
+                            this.state.products.push(res.data[i]);
+                        }
+                    } else {
+                        this.state.products.push(res.data[0]);
                     }
                     //this.state.products.push(res.data[0]);
                     this.setState({ ownerID: res.data[0].menu_owner });
-                    this.setState({itemID: res.data[0].p_id})
+                    this.setState({ itemID: res.data[0].p_id })
                 }
             }).catch((err) => {
                 throw err;
@@ -35,8 +39,8 @@ class BreakfastMenu extends Component {
     saveItem = (data) => {
         axios.post('http://localhost:3001/saveItem', data)
             .then(res => {
-                if(res)
-                console.log("Add/Updated!");
+                if (res)
+                    console.log("Add/Updated!");
             });
     }
 
@@ -127,7 +131,7 @@ class BreakfastMenu extends Component {
     }
 
     newProduct(source) {
-        
+
         const id = this.state.itemID + 1;
         const newProduct = {
             ProductID: id,
