@@ -38,9 +38,7 @@ class BreakfastMenu extends Component {
         axios.get('/getOwnerMenu')
         .then(res => {
           if (res) {
-              for(var i = 0; i < res.data.length; i++) {
-              console.log(res.data[i]);
-              }
+              this.state.data.push(res.data[0])
               this.setState({ ownerID: res.data[0].menu_owner});
           }
         }).catch((err) => {

@@ -42,7 +42,7 @@ const connection = mysql.createConnection({
 connection.connect((err) => {
     if (err) throw err;
     console.log('MySQL database connected!');
-    let userSQL = "CREATE TABLE IF NOT EXISTS users(id INT(11) AUTO_INCREMENT PRIMARY KEY NOT NULL, name VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL, password VARCHAR(255) NOT NULL, restaurantname VARCHAR(255) NOT NULL, zipcode VARCHAR(100) NOT NULL, owner BOOLEAN)";
+    let userSQL = "CREATE TABLE IF NOT EXISTS user(id INT(11) AUTO_INCREMENT PRIMARY KEY NOT NULL, name VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL, password VARCHAR(255) NOT NULL, restaurantname VARCHAR(255) NOT NULL, cuisine VARCHAR(255) NOT NULL, phone VARCHAR(255) NOT NULL, zipcode VARCHAR(100) NOT NULL, owner BOOLEAN)";
     let menuSQL = "CREATE TABLE IF NOT EXISTS menu(id INT(11) AUTO_INCREMENT PRIMARY KEY NOT NULL, p_name VARCHAR(100) NOT NULL, p_description VARCHAR(100) NOT NULL, p_image VARCHAR(255) NOT NULL, p_quantity VARCHAR(255) NOT NULL, p_price VARCHAR(100) NOT NULL, menu_section VARCHAR(100) NOT NULL, menu_owner VARCHAR(100) NOT NULL)";
     connection.query(userSQL, function (err, result) {
         if (err) throw err;
@@ -50,7 +50,7 @@ connection.connect((err) => {
     });
     connection.query(menuSQL, function (err, result) {
         if (err) throw err;
-            console.log("User table created!");
+            console.log("Menu table created!");
     });
 
 });
@@ -103,7 +103,7 @@ app.post('/register', (req, res) => {
             console.log(error);
             res.send('Invalid inputs!');
         } else {
-            let checkEmail = "SELECT email FROM users WHERE email = ?";
+            let checkEmail = "SELECT email FROM user WHERE email = ?";
             connection.query(checkEmail, [req.body.email], (err, results) => {
                 if (err) {
                     throw err;
@@ -111,7 +111,7 @@ app.post('/register', (req, res) => {
                     res.send('User already exists!');
                 } else {
                     console.log(value);
-                    let userSQL = "INSERT INTO users " + "SET name = ?, email = ?, password = ?, restaurantname = ?, zipcode = ?, owner = ?";
+                    let userSQL = "INSERT INTO user " + "SET name = ?, email = ?, password = ?, restaurantname = ?, zipcode = ?, owner = ?";
                     connection.query(userSQL, [req.body.name, req.body.email, req.body.password, req.body.restaurantname, req.body.zipcode, req.body.owner]);
                     res.send('Registered successfully!');
                 }
@@ -136,7 +136,7 @@ app.post('/login', (req, res) => {
         throw error;
     } else {
         console.log(value);
-        var authSQL = "SELECT * FROM users WHERE email = ? AND password = ?";
+        var authSQL = "SELECT * FROM user WHERE email = ? AND password = ?";
         connection.query(authSQL, [req.body.email, req.body.password], (err, results) => {
             if (err) {
                 throw err;
@@ -164,13 +164,15 @@ app.post('/login', (req, res) => {
 
 });
 
-app.post('/profile', (req, res) => {
+app.get('/profile', (req, res) => {
+    console.log('INISIDE PROFILE PAGE')
     if (req.session.isLoggedIn) {
-        var profileSQL = "SELECT * FROM users WHERE email = ?";
+        var profileSQL = "SELECT * FROM user WHERE email = ?";
         connection.query(profileSQL, [req.session.email], (err, results) => {
             if (err) {
                 throw err;
             } else if (results.length > 0) {
+                console.log(results);
                 res.send(results);
             } else {
                 console.log("Can't find user for profile page!");
@@ -181,10 +183,43 @@ app.post('/profile', (req, res) => {
     }
 });
 
+app.post('/updateProfile', (req, res) => {
+    console.log('INISIDE UPDATE PROFILE PAGE')
+    console.log(req.body);
+    const {name, email, restaurantname, cuisine, phone } = req.body;
+    if (req.session.isLoggedIn) {
+        let updateProfile = "UPDATE user " + "SET name = ?, email = ?, restaurantname = ?, cuisine = ?, phone = ? WHERE id = ?";
+        connection.query(updateProfile, [name, email, restaurantname, cuisine, phone, req.session.ID], (err, results) => {
+            if (err) {
+                throw err;
+            } else {
+                res.send('Updated Profile Successfully!');
+            }
+        });
+    } else {
+        console.log("Please log in first!");
+    }
+});
+
 app.post('/searchItem', (req, res) => {
     //query database for item
     console.log(req.body.item);
-    res.sendStatus(200);
+    
+    if (req.session.isLoggedIn) {
+        let findRestaurant = "SELECT restaurantname, p_name, menu_section, menu_owner FROM menu m INNER JOIN user u ON m.menu_owner = u.id AND m.p_name = ?";
+        connection.query(findRestaurant, [req.body.item], (err, results) => {
+            if (err) {
+                throw err;
+            } else if (results.length > 0) {
+                console.log(results);
+                res.send(results);
+            } else {
+                console.log("Can't find any menus for this item!");
+            }
+        });
+    } else {
+        console.log("Please log in first!");
+    }
 })
 
 app.post('/addOrder', (req, res) => {
@@ -208,7 +243,7 @@ app.post('/deleteOrder', (req, res) => {
 app.get('/getOwnerMenu', (req,res) => {
     console.log("INSIDE OWNER MENU")
     if (req.session.isLoggedIn) {
-        var ownerMenu = "SELECT * FROM menu WHERE menu_owner = ?";
+        let ownerMenu = "SELECT * FROM menu WHERE menu_owner = ? ";
         connection.query(ownerMenu, [req.session.ID], (err, results) => {
             if (err) {
                 throw err;

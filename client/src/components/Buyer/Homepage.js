@@ -9,11 +9,14 @@ class BuyerHome extends Component {
 
         this.state = {
             item: null,
-            redirectSearch: false
+            redirectSearch: false,
+            viewFilter: false,
+            resultTable: [],
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.showFilterPage = this.showFilterPage.bind(this);
     }
 
     handleChange = (e) => {
@@ -24,7 +27,8 @@ class BuyerHome extends Component {
         axios.post('http://localhost:3001/searchItem', data)
             .then(res => {
                 if (res.status === 200) {
-                    this.setState({ redirectSearch: true })
+                    this.setState({ resultTable: res.data });
+                    //this.setState({ redirectSearch: true })
                 } else {
                     this.setState({ redirectSearch: false })
                 }
@@ -33,13 +37,36 @@ class BuyerHome extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-
         this.sendRestAPI({ item: this.state.item });
+    }
+
+    showFilterPage = (e) => {
+            this.setState({ viewFilter: true })
     }
 
     render() {
         if (this.state.redirectSearch) {
             return <Redirect to="/buyerhome/search" />;
+        }
+
+        let filterPage = null;
+        if(this.state.viewFilter) {
+            filterPage = <div>
+            <table>
+                Filter:
+                <tbody>
+                    {this.state.resultTable.map((item, i) =>
+                        <tr id={i}>
+                            <td style={{ textAlign: 'center' }}>{item.id}</td>
+                            <td style={{ textAlign: 'center' }}>{item.p_name}</td>
+                            <td style={{ textAlign: 'center' }}>{item.p_price}</td>
+                            <td style={{ textAlign: 'center' }}>{item.menu_owner}</td>
+                            <td style={{ textAlign: 'center' }}>{item.restaurantname}</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+            </div>
         }
         return (
             <div>
@@ -51,6 +78,25 @@ class BuyerHome extends Component {
                             name="item" value={this.state.item} onChange={this.handleChange} required />
                     </form>
                 </MDBCol>
+                <div>
+                    <table>
+                        Result:
+                        <tbody>
+                            {this.state.resultTable.map((item, i) =>
+                                <tr id={i}>
+                                    <td style={{ textAlign: 'center' }}>{item.id}</td>
+                                    <td style={{ textAlign: 'center' }}>{item.restaurantname}</td>
+                                    <td style={{ textAlign: 'center' }}>{item.p_name}</td>
+                                    <td style={{ textAlign: 'center' }}>{item.menu_section}</td>
+                                    <td style={{ textAlign: 'center' }}>{item.menu_owner}</td>
+                                    <button>Add to Cart</button>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+                <button onClick={this.showFilterPage}>Filter</button>
+                {filterPage}
             </div>
         )
     }
