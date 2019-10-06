@@ -13,6 +13,8 @@ class Register extends Component {
             password: null,
             restaurantname: null,
             zipcode: null,
+            cuisine: null,
+            phone: null,
             owner: false,
             output: ''
         };
@@ -43,7 +45,9 @@ class Register extends Component {
             email: this.state.email,
             password: this.state.password,
             restaurantname: "N/A",
+            cuisine: "N/A",
             zipcode: "N/A",
+            phone: "N/A",
             owner: false
         }
 
@@ -53,6 +57,8 @@ class Register extends Component {
             password: this.state.password,
             restaurantname: this.state.restaurantname,
             zipcode: this.state.zipcode,
+            cuisine: "N/A",
+            phone: "N/A",
             owner: true
         }
 

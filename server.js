@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const Joi = require('@hapi/joi');
 const mysql = require('mysql');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 app.set('view engine', 'ejs');
 //use cors to allow cross origin resource sharing
@@ -110,10 +112,14 @@ app.post('/register', (req, res) => {
                 } else if (results.length > 0) {
                     res.send('User already exists!');
                 } else {
-                    console.log(value);
-                    let userSQL = "INSERT INTO user " + "SET name = ?, email = ?, password = ?, restaurantname = ?, zipcode = ?, owner = ?";
-                    connection.query(userSQL, [req.body.name, req.body.email, req.body.password, req.body.restaurantname, req.body.zipcode, req.body.owner]);
-                    res.send('Registered successfully!');
+                    const {name, email, password, restaurantname, zipcode, cuisine, phone, owner} = req.body;
+                    let userSQL = "INSERT INTO user " + "SET name = ?, email = ?, password = ?, restaurantname = ?, cuisine = ?, phone = ?, zipcode = ?, owner = ?";
+                    bcrypt.hash(password, saltRounds, function(err, hash) {
+                        if(err) throw err;
+                        connection.query(userSQL, [name, email, hash, restaurantname, zipcode, cuisine, phone, owner]);
+                         console.log(value);
+                        res.send('Registered successfully!');
+                    });
                 }
             });
         }
@@ -126,48 +132,57 @@ app.post('/register', (req, res) => {
 app.post('/login', (req, res) => {
     console.log("INSIDE LOGIN");
 
+    //validate user inputs w/ Joi
     const schema = Joi.object({
         email: Joi.string().lowercase().trim().email().required(),
         password: Joi.string().min(6).max(16).pattern(/^[a-zA-Z0-9]{3,30}$/).required()
     });
 
+    //once validated, query user credential and validate against hash password w/ bcrypt
     const { error, value } = schema.validate({ email: req.body.email, password: req.body.password });
-    if (error) {
+    if (error) { 
         throw error;
     } else {
         console.log(value);
-        var authSQL = "SELECT * FROM user WHERE email = ? AND password = ?";
-        connection.query(authSQL, [req.body.email, req.body.password], (err, results) => {
-            if (err) {
+        let authSQL = "SELECT * FROM user WHERE email = ?";
+        connection.query(authSQL, [req.body.email], (err, results) => {
+            if (err) { 
                 throw err;
             } else if (results.length > 0) {
-                if (results[0].owner == 0) {
-                    res.cookie('cookie', "buyer", { maxAge: 900000, httpOnly: false, path: '/' });
-                } else {
-                    res.cookie('cookie', "owner", { maxAge: 900000, httpOnly: false, path: '/' });
-                }
-                req.session.email = results[0].email;
-                req.session.ID = results[0].id;
-                req.session.isLoggedIn = true;
-                console.log(req.session.email);
-                console.log(req.session.ID);
-                res.writeHead(200, {
-                    'Content-Type': 'text/plain'
-                })
-                res.end("Successful Login!");
+                bcrypt.compare(req.body.password, results[0].password).then(function(bres) {
+                    if(bres) {
+                        if (results[0].owner == 0) {
+                            res.cookie('cookie', "buyer", { maxAge: 900000, httpOnly: false, path: '/' });
+                        } else {
+                            res.cookie('cookie', "owner", { maxAge: 900000, httpOnly: false, path: '/' });
+                        }
+                        req.session.email = results[0].email;
+                        req.session.ID = results[0].id;
+                        req.session.isLoggedIn = true;
+                        console.log(req.session.email);
+                        console.log(req.session.ID);
+                        res.writeHead(200, {
+                            'Content-Type': 'text/plain'
+                        })
+                        res.end("Successful Login!");
+                    } else {
+                        console.log("PASSWORD DOES NOT MATCH!")
+                    }
+                });
             } else {
                 console.log("Invalid credentials!");
                 res.sendStatus(404);
             }
         });
     }
-
 });
 
-app.get('/profile', (req, res) => {
+app.get('/getProfile', (req, res) => {
     console.log('INISIDE PROFILE PAGE')
-    if (req.session.isLoggedIn) {
-        var profileSQL = "SELECT * FROM user WHERE email = ?";
+    if (!req.session.isLoggedIn) {
+        console.log("User has to be logged in to retrieve profile...");
+    } else {
+        let profileSQL = "SELECT * FROM user WHERE email = ?";
         connection.query(profileSQL, [req.session.email], (err, results) => {
             if (err) {
                 throw err;
@@ -178,8 +193,6 @@ app.get('/profile', (req, res) => {
                 console.log("Can't find user for profile page!");
             }
         });
-    } else {
-        console.log("Please log in first!");
     }
 });
 
@@ -187,7 +200,9 @@ app.post('/updateProfile', (req, res) => {
     console.log('INISIDE UPDATE PROFILE PAGE')
     console.log(req.body);
     const {name, email, restaurantname, cuisine, phone } = req.body;
-    if (req.session.isLoggedIn) {
+    if (!req.session.isLoggedIn) {
+        console.log("User has to be logged in to update profile...");
+    } else {
         let updateProfile = "UPDATE user " + "SET name = ?, email = ?, restaurantname = ?, cuisine = ?, phone = ? WHERE id = ?";
         connection.query(updateProfile, [name, email, restaurantname, cuisine, phone, req.session.ID], (err, results) => {
             if (err) {
@@ -196,8 +211,6 @@ app.post('/updateProfile', (req, res) => {
                 res.send('Updated Profile Successfully!');
             }
         });
-    } else {
-        console.log("Please log in first!");
     }
 });
 
@@ -222,24 +235,6 @@ app.post('/searchItem', (req, res) => {
     }
 })
 
-app.post('/addOrder', (req, res) => {
-    //query database for item
-    console.log(req.body);
-    res.sendStatus(200);
-})
-
-app.post('/updateOrder', (req, res) => {
-    //query database for item
-    console.log(req.body);
-    res.sendStatus(200);
-})
-
-app.post('/deleteOrder', (req, res) => {
-    //query database for item
-    console.log(req.body);
-    res.sendStatus(200);
-})
-
 app.get('/getOwnerMenu', (req,res) => {
     console.log("INSIDE OWNER MENU")
     if (req.session.isLoggedIn) {
@@ -256,6 +251,24 @@ app.get('/getOwnerMenu', (req,res) => {
     } else {
         console.log("Please log in first!");
     }
+})
+
+app.post('/addOrder', (req, res) => {
+    //query database for item
+    console.log(req.body);
+    res.sendStatus(200);
+})
+
+app.post('/updateOrder', (req, res) => {
+    //query database for item
+    console.log(req.body);
+    res.sendStatus(200);
+})
+
+app.post('/deleteOrder', (req, res) => {
+    //query database for item
+    console.log(req.body);
+    res.sendStatus(200);
 })
 
 module.exports = app;

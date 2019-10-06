@@ -20,7 +20,7 @@ class Profile extends Component {
     }
   
     componentDidMount() {
-        axios.get('/profile')
+        axios.get('http://localhost:3001/getProfile')
         .then(res => {
           if (res)
           this.setState({ name: res.data[0].name });
@@ -39,7 +39,7 @@ class Profile extends Component {
         this.setState({ [e.target.name]: e.target.value });
     }
 
-    sendRestAPI = (data) => {
+    updateProfile = (data) => {
         
         axios.post('http://localhost:3001/updateProfile', data)
             .then(res => {
@@ -58,7 +58,7 @@ class Profile extends Component {
             cuisine: this.state.cuisine,
             phone: "N/A"
         }
-        this.sendRestAPI(ownerData);
+        this.updateProfile(ownerData);
     }
 
     updateBuyer = (e) => {
@@ -71,7 +71,7 @@ class Profile extends Component {
             restaurantname: "N/A",
             cuisine: "N/A"
         }
-        this.sendRestAPI(buyerData);
+        this.updateProfile(buyerData);
     }
 
     render() {
@@ -81,18 +81,18 @@ class Profile extends Component {
         } else if(this.state.loading && cookie.load('cookie') === 'owner') {
             renderPage = 
             <div>
-                 Name: <input type="text" name="name" defaultValue={this.state.name} onChange={this.handleChange} required></input>
-                 Email: <input type="email" name="email" defaultValue={this.state.email} onChange={this.handleChange} required ></input>
-                 Restaurant: <input type="text" name="restaurantname" defaultValue={this.state.restaurantname} onChange={this.handleChange} required></input>
-                 Cuisine: <input type="text" name="cuisine" defaultValue={this.state.cuisine} onChange={this.handleChange} required></input>
+                 Name: <input type="text" name="name" defaultValue={this.state.name} onChange={this.handleChange} required></input><br/>
+                 Email: <input type="email" name="email" defaultValue={this.state.email} onChange={this.handleChange} required ></input><br/>
+                 Restaurant: <input type="text" name="restaurantname" defaultValue={this.state.restaurantname} onChange={this.handleChange} required></input><br/>
+                 Cuisine: <input type="text" name="cuisine" defaultValue={this.state.cuisine} onChange={this.handleChange} required></input><br/>
                  <button onClick={this.updateOwner}>Update Profile</button>
             </div>
         } else if (cookie.load('cookie') === 'buyer') {
             renderPage = 
             <div>
-                 Name: <input type="text" name="name" defaultValue={this.state.name} onChange={this.handleChange} required></input>
-                 Email: <input type="email" name="email" defaultValue={this.state.email} onChange={this.handleChange} required ></input>
-                 Phone: <input type="text" name="phone" defaultValue={this.state.phone} onChange={this.handleChange} required></input>
+                 Name: <input type="text" name="name" defaultValue={this.state.name} onChange={this.handleChange} required></input><br/>
+                 Email: <input type="email" name="email" defaultValue={this.state.email} onChange={this.handleChange} required ></input><br/>
+                 Phone: <input type="text" name="phone" defaultValue={this.state.phone} onChange={this.handleChange} required></input><br/>
                  <button onClick={this.updateBuyer}>Update Profile</button>
             </div>
         }

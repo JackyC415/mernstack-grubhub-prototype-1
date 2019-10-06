@@ -36,12 +36,16 @@ class NavbarPage extends Component {
         });
     }
     render() {
-        let main = null;    
+        let main = null;
         if (cookie.load('cookie')) {
             main = (
                 <div>
                     <Navbar color="light" light expand="md">
-                        <NavbarBrand href="/">Lab1</NavbarBrand>
+                        <Nav className="ml-auto" navbar>
+                            <NavItem>
+                                <NavLink tag={Link} to="/">Grubhub Prototype Lab1 </NavLink>
+                            </NavItem>
+                        </Nav>
                         <NavbarToggler onClick={this.toggle} />
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="ml-auto" navbar>
@@ -63,7 +67,11 @@ class NavbarPage extends Component {
             main = (
                 <div>
                     <Navbar color="light" light expand="md">
-                        <NavbarBrand href="/">Lab1</NavbarBrand>
+                        <Nav className="ml-auto" navbar>
+                            <NavItem>
+                                <NavLink tag={Link} to="/">Grubhub Prototype Lab1 </NavLink>
+                            </NavItem>
+                        </Nav>
                         <div>
                             <Spinner type="grow" color="primary" />
                             <Spinner type="grow" color="secondary" />
@@ -73,6 +81,46 @@ class NavbarPage extends Component {
                             <Spinner type="grow" color="info" />
                             <Spinner type="grow" color="light" />
                             <Spinner type="grow" color="dark" />
+                            <Spinner color="primary" />
+                            <Spinner color="secondary" />
+                            <Spinner color="success" />
+                            <Spinner color="danger" />
+                            <Spinner color="warning" />
+                            <Spinner color="info" />
+                            <Spinner color="light" />
+                            <Spinner color="dark" />
+                            <Spinner type="grow" color="primary" />
+                            <Spinner type="grow" color="secondary" />
+                            <Spinner type="grow" color="success" />
+                            <Spinner type="grow" color="danger" />
+                            <Spinner type="grow" color="warning" />
+                            <Spinner type="grow" color="info" />
+                            <Spinner type="grow" color="light" />
+                            <Spinner type="grow" color="dark" />
+                            <Spinner color="primary" />
+                            <Spinner color="secondary" />
+                            <Spinner color="success" />
+                            <Spinner color="danger" />
+                            <Spinner color="warning" />
+                            <Spinner color="info" />
+                            <Spinner color="light" />
+                            <Spinner color="dark" />
+                            <Spinner type="grow" color="primary" />
+                            <Spinner type="grow" color="secondary" />
+                            <Spinner type="grow" color="success" />
+                            <Spinner type="grow" color="danger" />
+                            <Spinner type="grow" color="warning" />
+                            <Spinner type="grow" color="info" />
+                            <Spinner type="grow" color="light" />
+                            <Spinner type="grow" color="dark" />
+                            <Spinner color="primary" />
+                            <Spinner color="secondary" />
+                            <Spinner color="success" />
+                            <Spinner color="danger" />
+                            <Spinner color="warning" />
+                            <Spinner color="info" />
+                            <Spinner color="light" />
+                            <Spinner color="dark" />
                         </div>
                         <NavbarToggler onClick={this.toggle} />
                         <Collapse isOpen={this.state.isOpen} navbar>
@@ -86,6 +134,9 @@ class NavbarPage extends Component {
                             </Nav>
                         </Collapse>
                     </Navbar>
+                    <h1>Grubhub Prototype</h1>
+                    <h2>Creator: Jacky Z. Chen</h2>
+                    <h3>CMPE 273. Professor Simon Shim. Fall 2019</h3>
                 </div>
             )
         }
