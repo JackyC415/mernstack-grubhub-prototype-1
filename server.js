@@ -110,7 +110,7 @@ app.post('/register', (req, res) => {
                 if (err) {
                     throw err;
                 } else if (results.length > 0) {
-                    res.send('User already exists!');
+                    res.status(404).send('User already exists!');
                 } else {
                     const {name, email, password, restaurantname, zipcode, cuisine, phone, owner} = req.body;
                     let userSQL = "INSERT INTO user " + "SET name = ?, email = ?, password = ?, restaurantname = ?, cuisine = ?, phone = ?, zipcode = ?, owner = ?";
@@ -118,7 +118,7 @@ app.post('/register', (req, res) => {
                         if(err) throw err;
                         connection.query(userSQL, [name, email, hash, restaurantname, zipcode, cuisine, phone, owner]);
                          console.log(value);
-                        res.send('Registered successfully!');
+                        res.status(200).send('Registered successfully!');
                     });
                 }
             });
@@ -180,6 +180,7 @@ app.post('/login', (req, res) => {
 app.get('/getProfile', (req, res) => {
     console.log('INISIDE PROFILE PAGE')
     if (!req.session.isLoggedIn) {
+        res.sendStatus(404);
         console.log("User has to be logged in to retrieve profile...");
     } else {
         let profileSQL = "SELECT * FROM user WHERE email = ?";
@@ -188,7 +189,7 @@ app.get('/getProfile', (req, res) => {
                 throw err;
             } else if (results.length > 0) {
                 console.log(results);
-                res.send(results);
+                res.status(200).send(results);
             } else {
                 console.log("Can't find user for profile page!");
             }
@@ -227,6 +228,7 @@ app.post('/searchItem', (req, res) => {
                 console.log(results);
                 res.send(results);
             } else {
+                res.sendStatus(404);
                 console.log("Can't find any menus for this item!");
             }
         });
@@ -337,9 +339,21 @@ app.post('/saveItem', (req, res) => {
 })
 
 app.post('/removeItem', (req, res) => {
-    //query database for item
-    console.log('REMOVE ITEM')
+    const {p_name, p_description, p_image, p_quantity, p_price} = req.body;
     console.log(req.body);
+    if (req.session.isLoggedIn) {
+        let ownerMenu = "DELETE FROM menus WHERE p_name = ? AND p_description = ? AND p_image = ? AND p_quantity = ? AND p_price = ? LIMIT 1";
+        connection.query(ownerMenu, [p_name,p_description,p_image,p_quantity,p_price], (err, results) => {
+            if (err) {
+                throw err;
+            } else {
+                res.sendStatus(200);
+                console.log("DELETED!");
+            }
+        });
+    } else {
+        console.log("Please log in first!");
+    }
 })
 
 module.exports = app;
