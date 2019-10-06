@@ -12,6 +12,7 @@ class BuyerHome extends Component {
             redirectSearch: false,
             viewFilter: false,
             resultTable: [],
+            filteredCuisines: []
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -42,6 +43,14 @@ class BuyerHome extends Component {
 
     showFilterPage = (e) => {
             this.setState({ viewFilter: true })
+            axios.post('http://localhost:3001/filter')
+            .then(res => {
+                if (res.status === 200) {
+                    this.setState({ filteredCuisines: res.data });
+                } else {
+                    this.setState({ redirectSearch: false })
+                }
+            });
     }
 
     render() {
@@ -55,13 +64,9 @@ class BuyerHome extends Component {
             <table>
                 Filter:
                 <tbody>
-                    {this.state.resultTable.map((item, i) =>
+                    {this.state.filteredCuisines.map((item, i) =>
                         <tr id={i}>
-                            <td style={{ textAlign: 'center' }}>{item.id}</td>
-                            <td style={{ textAlign: 'center' }}>{item.p_name}</td>
-                            <td style={{ textAlign: 'center' }}>{item.p_price}</td>
-                            <td style={{ textAlign: 'center' }}>{item.menu_owner}</td>
-                            <td style={{ textAlign: 'center' }}>{item.restaurantname}</td>
+                            <td style={{ textAlign: 'center' }}>{item.cuisine}</td>
                         </tr>
                     )}
                 </tbody>
@@ -72,6 +77,7 @@ class BuyerHome extends Component {
             <div>
                 <h2>Buyer Homepage</h2>
                 <MDBCol md="6">
+                   Search:
                     <form className="form-inline mt-4 mb-4" onSubmit={this.handleSubmit}>
                         <MDBIcon icon="search" />
                         <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search item name" aria-label="Search"
@@ -84,11 +90,7 @@ class BuyerHome extends Component {
                         <tbody>
                             {this.state.resultTable.map((item, i) =>
                                 <tr id={i}>
-                                    <td style={{ textAlign: 'center' }}>{item.id}</td>
                                     <td style={{ textAlign: 'center' }}>{item.restaurantname}</td>
-                                    <td style={{ textAlign: 'center' }}>{item.p_name}</td>
-                                    <td style={{ textAlign: 'center' }}>{item.menu_section}</td>
-                                    <td style={{ textAlign: 'center' }}>{item.menu_owner}</td>
                                     <button>Add to Cart</button>
                                 </tr>
                             )}

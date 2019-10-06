@@ -45,7 +45,7 @@ connection.connect((err) => {
     if (err) throw err;
     console.log('MySQL database connected!');
     let userSQL = "CREATE TABLE IF NOT EXISTS user(id INT(11) AUTO_INCREMENT PRIMARY KEY NOT NULL, name VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL, password VARCHAR(255) NOT NULL, restaurantname VARCHAR(255) NOT NULL, cuisine VARCHAR(255) NOT NULL, phone VARCHAR(255) NOT NULL, zipcode VARCHAR(100) NOT NULL, owner BOOLEAN)";
-    let menuSQL = "CREATE TABLE IF NOT EXISTS menu(id INT(11) AUTO_INCREMENT PRIMARY KEY NOT NULL, p_name VARCHAR(100) NOT NULL, p_description VARCHAR(100) NOT NULL, p_image VARCHAR(255) NOT NULL, p_quantity VARCHAR(255) NOT NULL, p_price VARCHAR(100) NOT NULL, menu_section VARCHAR(100) NOT NULL, menu_owner VARCHAR(100) NOT NULL)";
+    let menuSQL = "CREATE TABLE IF NOT EXISTS menus(p_id INT(11) AUTO_INCREMENT PRIMARY KEY NOT NULL, p_name VARCHAR(100) NOT NULL, p_description VARCHAR(100) NOT NULL, p_image VARCHAR(255) NOT NULL, p_quantity VARCHAR(255) NOT NULL, p_price VARCHAR(100) NOT NULL, menu_section VARCHAR(100) NOT NULL, menu_owner VARCHAR(100) NOT NULL)";
     connection.query(userSQL, function (err, result) {
         if (err) throw err;
             console.log("User table created!");
@@ -219,7 +219,7 @@ app.post('/searchItem', (req, res) => {
     console.log(req.body.item);
     
     if (req.session.isLoggedIn) {
-        let findRestaurant = "SELECT restaurantname, p_name, menu_section, menu_owner FROM menu m INNER JOIN user u ON m.menu_owner = u.id AND m.p_name = ?";
+        let findRestaurant = "SELECT restaurantname FROM menus m INNER JOIN user u ON m.menu_owner = u.id AND m.p_name = ?";
         connection.query(findRestaurant, [req.body.item], (err, results) => {
             if (err) {
                 throw err;
@@ -235,17 +235,18 @@ app.post('/searchItem', (req, res) => {
     }
 })
 
-app.get('/getOwnerMenu', (req,res) => {
-    console.log("INSIDE OWNER MENU")
+app.post('/filter', (req, res) => {
+    
     if (req.session.isLoggedIn) {
-        let ownerMenu = "SELECT * FROM menu WHERE menu_owner = ? ";
-        connection.query(ownerMenu, [req.session.ID], (err, results) => {
+        let findRestaurant = "SELECT cuisine FROM user u INNER JOIN menus m ON u.id = m.menu_owner GROUP BY cuisine";
+        connection.query(findRestaurant, (err, results) => {
             if (err) {
                 throw err;
             } else if (results.length > 0) {
+                console.log(results);
                 res.send(results);
             } else {
-                console.log("Can't find owner menu!");
+                console.log("Can't find any cuisines!");
             }
         });
     } else {
@@ -253,22 +254,92 @@ app.get('/getOwnerMenu', (req,res) => {
     }
 })
 
-app.post('/addOrder', (req, res) => {
-    //query database for item
-    console.log(req.body);
-    res.sendStatus(200);
+app.get('/getOwnerMenu/breakfast', (req,res) => {
+    console.log("INSIDE OWNER MENU")
+    if (req.session.isLoggedIn) {
+        let ownerMenu = "SELECT * FROM menus WHERE menu_owner = ? AND menu_section = 'Breakfast'";
+        connection.query(ownerMenu, [req.session.ID], (err, results) => {
+            if (err) {
+                throw err;
+            } else if (results.length > 0) {
+                res.send(results);
+            } else {
+                console.log("Can't find owner's breakfast menu!");
+            }
+        });
+    } else {
+        console.log("Please log in first!");
+    }
 })
 
-app.post('/updateOrder', (req, res) => {
-    //query database for item
-    console.log(req.body);
-    res.sendStatus(200);
+app.get('/getOwnerMenu/lunch', (req,res) => {
+    console.log("INSIDE OWNER MENU")
+    if (req.session.isLoggedIn) {
+        let ownerMenu = "SELECT * FROM menus WHERE menu_owner = ? AND menu_section = 'Lunch'";
+        connection.query(ownerMenu, [req.session.ID], (err, results) => {
+            if (err) {
+                throw err;
+            } else if (results.length > 0) {
+                res.send(results);
+            } else {
+                console.log("Can't find owner's lunch menu!");
+            }
+        });
+    } else {
+        console.log("Please log in first!");
+    }
 })
 
-app.post('/deleteOrder', (req, res) => {
+app.get('/getOwnerMenu/appetizer', (req,res) => {
+    console.log("INSIDE OWNER MENU")
+    if (!req.session.isLoggedIn) {
+        console.log("Please log in first!");
+    } else {
+        let ownerMenu = "SELECT * FROM menus WHERE menu_owner = ? AND menu_section = 'Appetizer'";
+        connection.query(ownerMenu, [req.session.ID], (err, results) => {
+            if (err) {
+                throw err;
+            } else if (results.length > 0) {
+                res.send(results);
+            } else {
+                console.log("Can't find owner's appetizer menu!");
+            }
+        });
+    }
+})
+
+app.post('/saveItem', (req, res) => {
+    console.log('INSIDE SAVE ITEM')
+    const {p_id, p_name, p_description, p_image, p_quantity, p_price} = req.body;
+    if (!req.session.isLoggedIn) {
+        console.log("Please log in first!");
+    } else {
+        let findItem = "SELECT p_id FROM menus WHERE menu_owner = ? AND p_id = ? AND menu_section = 'Breakfast'";
+        connection.query(findItem, [req.session.ID, p_id], (err, results) => {
+            if (err) {
+                throw err;
+            } else if (results.length > 0) {
+                let updateItem = "UPDATE menus " + "SET p_name = ?, p_description = ?, p_image = ?, p_quantity = ?, p_price = ? WHERE p_id = ?";
+                connection.query(updateItem, [p_name, p_description, p_image, p_quantity, p_price, p_id], (err, results) => {
+                    if(err) throw err;
+                    console.log(results);
+                });
+            } else {
+                let insertItem = "INSERT INTO menus " + "SET p_name = ?, p_description = ?, p_image = ?, p_quantity = ?, p_price = ?, menu_section = 'Breakfast', menu_owner = ?";
+                connection.query(insertItem, [p_name, p_description, p_image, p_quantity, p_price, req.session.ID], (err, results) => {
+                    if(err) throw err;
+                    console.log(results);
+                });
+            }
+        });
+        res.sendStatus(200);
+    }
+})
+
+app.post('/removeItem', (req, res) => {
     //query database for item
+    console.log('REMOVE ITEM')
     console.log(req.body);
-    res.sendStatus(200);
 })
 
 module.exports = app;
