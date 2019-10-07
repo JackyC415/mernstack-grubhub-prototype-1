@@ -11,7 +11,6 @@ const Joi = require('@hapi/joi');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-var PORT = process.env.PORT || 3001;
 
 app.set('view engine', 'ejs');
 //use cors to allow cross origin resource sharing
@@ -426,6 +425,15 @@ app.get('/getBuyerOrders', (req, res) => {
     }
 });
 
+if(process.env.NODE_ENV === "production") {
+    app.use(express.static('client/build'));
+
+    app.get('*', (req,res) => {
+        res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
+    })
+}
+
 module.exports = app;
 
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log('Server listening on port 3001'));
