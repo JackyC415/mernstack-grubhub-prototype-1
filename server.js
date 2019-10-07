@@ -37,11 +37,10 @@ app.use(session({
 
 //initialize database connection
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'password',
-    database: 'lab1DB',
-    mysql: 'jklr5e9iuxu5b0ga:xll9wjo7ec2d26ar@r4919aobtbi97j46.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/lzp2wfiyrz5y9xl0'
+    host: 'r4919aobtbi97j46.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
+    user: 'jklr5e9iuxu5b0ga',
+    password: 'xll9wjo7ec2d26ar',
+    database: 'lzp2wfiyrz5y9xl0'
 });
 /*
 const connection = mysql.createConnection({
