@@ -36,12 +36,16 @@ app.use(session({
 }));
 
 //initialize database connection
-const connection = mysql.createConnection({
-    host: 'r4919aobtbi97j46.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
-    user: 'jklr5e9iuxu5b0ga',
-    password: 'xll9wjo7ec2d26ar',
-    database: 'lzp2wfiyrz5y9xl0'
+if(process.env.JAWSDB_URL) {
+    var connection = mysql.createConnection(process.env.JAWSDB_URL)
+} else {
+    var connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'password',
+    database: 'lab1DB'
 });
+}
 
 //connect to mySQL and create tables
 connection.connect((err) => {
@@ -424,14 +428,6 @@ app.get('/getBuyerOrders', (req, res) => {
         });
     }
 });
-
-if(process.env.NODE_ENV === "production") {
-    app.use(express.static('client/build'));
-
-    app.get('*', (req,res) => {
-        res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
-    })
-}
 
 module.exports = app;
 
