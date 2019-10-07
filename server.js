@@ -11,6 +11,7 @@ const Joi = require('@hapi/joi');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+var PORT = process.env.PORT || 3001;
 
 app.set('view engine', 'ejs');
 //use cors to allow cross origin resource sharing
@@ -42,15 +43,6 @@ const connection = mysql.createConnection({
     password: 'xll9wjo7ec2d26ar',
     database: 'lzp2wfiyrz5y9xl0'
 });
-/*
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'password',
-    database: 'lab1DB',
-    mysql: 'jklr5e9iuxu5b0ga:xll9wjo7ec2d26ar@r4919aobtbi97j46.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/lzp2wfiyrz5y9xl0'
-});
-*/
 
 //connect to mySQL and create tables
 connection.connect((err) => {
@@ -436,4 +428,4 @@ app.get('/getBuyerOrders', (req, res) => {
 
 module.exports = app;
 
-app.listen(3001, () => console.log('Server listening on port 3001'));
+app.listen(PORT, () => console.log('Server listening on port 3001'));
