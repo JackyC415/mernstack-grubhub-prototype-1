@@ -9,5 +9,6 @@ Instructions to run applicaton:
 2. cd <dir_name>/client/
 3. npm install
 4. cd .. -> return to root directory
-5. npm run dev
-6. access localhost:3000 on the browser
+5. npm install again on root directory for back-end
+6. npm run dev or npm start to launch server
+7. access localhost:3000 on the browser
