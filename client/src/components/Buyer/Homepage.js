@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { MDBCol, MDBIcon } from "mdbreact";
 import axios from 'axios';
 import { Redirect } from 'react-router';
+import cookie from 'react-cookies';
+import { Link } from 'react-router-dom';
 
 class BuyerHome extends Component {
     constructor(props) {
@@ -73,30 +75,41 @@ class BuyerHome extends Component {
             </table>
             </div>
         }
+        let redirectHome = null;
+        if (cookie.load('cookie') !== 'owner') {
+            redirectHome = <Redirect to="/buyerhome" />
+        }
+
+        let showRestaurants = null;
+        if(this.state.resultTable.length > 0) {
+            showRestaurants = (
+                <div>
+                    <table>
+                        <tbody>
+                            {this.state.resultTable.map((item, i) =>
+                                <tr id={i}>
+                                Restaurant {i}: <td style={{ textAlign: 'center' }}> {item.restaurantname}</td>
+                                <Link to="/buyerhome/addtocart">Order from Restaurant</Link>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            )
+        }
         return (
             <div>
+                {redirectHome}
                 <h2>Buyer Homepage</h2>
+                <li><Link to="/buyerhome/viewcart">Cart</Link></li>
                 <MDBCol md="6">
-                   Search:
                     <form className="form-inline mt-4 mb-4" onSubmit={this.handleSubmit}>
                         <MDBIcon icon="search" />
                         <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search item name" aria-label="Search"
                             name="item" value={this.state.item} onChange={this.handleChange} required />
                     </form>
                 </MDBCol>
-                <div>
-                    <table>
-                        Result:
-                        <tbody>
-                            {this.state.resultTable.map((item, i) =>
-                                <tr id={i}>
-                                    <td style={{ textAlign: 'center' }}>{item.restaurantname}</td>
-                                    <button>Add to Cart</button>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                {showRestaurants}
                 <button onClick={this.showFilterPage}>Filter</button>
                 {filterPage}
             </div>

@@ -6,10 +6,11 @@ import Login from './Login/Login';
 import Register from './Register/Register';
 import Profile from './Profile/Profile';
 import Buyerhome from './Buyer/Homepage';
+import addToCart from './Buyer/AddToCart';
 import Ownerhome from './Owner/Homepage';
-import BuyerSearch from './Buyer/Search';
-import BreakfastMenu from './Owner/BreakfastMenu';
 import OwnerMenu from './Owner/Menu';
+import ViewOrder from './Owner/ViewOrder';
+import ViewCart from './Buyer/ViewCart';
 
 //Create a Main Component
 class Main extends Component {
@@ -23,9 +24,10 @@ class Main extends Component {
                 <Route path="/login" component={Login} />
                 <Route path="/profile" component={Profile} />
                 <Route path="/buyerhome" component={Buyerhome} />
-                <Route path="/buyerhome/search" component={BuyerSearch} />
+                <Route path="/buyerhome/addtocart" component={addToCart} />
+                <Route path="/buyerhome/viewcart" component={ViewCart} />
                 <Route path="/ownerhome" component={Ownerhome} />
-                <Route path="/ownerhome/order" component={BreakfastMenu} />
+                <Route path="/ownerhome/vieworder" component={ViewOrder} />
                 <Route path="/ownerhome/menu" component={OwnerMenu} />
             </div>
         )

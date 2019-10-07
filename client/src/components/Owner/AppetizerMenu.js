@@ -20,12 +20,10 @@ class LunchMenu extends Component {
             .then(res => {
                 if (res) {
                     console.log(res.data);
-                    if (res.data.length > 1) {
+                    if (res.data.length >= 0) {
                         for (var i = 0; i < res.data.length; i++) {
                             this.state.products.push(res.data[i]);
                         }
-                    } else {
-                        this.state.products.push(res.data[0]);
                     }
                     this.setState({ ownerID: res.data[0].menu_owner });
                     this.setState({ itemID: res.data[0].p_id })

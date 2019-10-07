@@ -40,8 +40,18 @@ const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'password',
-    database: 'lab1DB'
+    database: 'lab1DB',
+    mysql: 'jklr5e9iuxu5b0ga:xll9wjo7ec2d26ar@r4919aobtbi97j46.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/lzp2wfiyrz5y9xl0'
 });
+/*
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'password',
+    database: 'lab1DB',
+    mysql: 'jklr5e9iuxu5b0ga:xll9wjo7ec2d26ar@r4919aobtbi97j46.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/lzp2wfiyrz5y9xl0'
+});
+*/
 
 //connect to mySQL and create tables
 connection.connect((err) => {
@@ -49,6 +59,7 @@ connection.connect((err) => {
     console.log('MySQL database connected!');
     let userSQL = "CREATE TABLE IF NOT EXISTS user(id INT(11) AUTO_INCREMENT PRIMARY KEY NOT NULL, name VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL, password VARCHAR(255) NOT NULL, restaurantname VARCHAR(255) NOT NULL, cuisine VARCHAR(255) NOT NULL, phone VARCHAR(255) NOT NULL, zipcode VARCHAR(100) NOT NULL, owner BOOLEAN)";
     let menuSQL = "CREATE TABLE IF NOT EXISTS menus(p_id INT(11) AUTO_INCREMENT PRIMARY KEY NOT NULL, p_name VARCHAR(100) NOT NULL, p_description VARCHAR(100) NOT NULL, p_image VARCHAR(255) NOT NULL, p_quantity VARCHAR(255) NOT NULL, p_price VARCHAR(100) NOT NULL, menu_section VARCHAR(100) NOT NULL, menu_owner VARCHAR(100) NOT NULL)";
+    let orderSQL = "CREATE TABLE IF NOT EXISTS orders(o_id INT(11) AUTO_INCREMENT PRIMARY KEY NOT NULL, o_name VARCHAR(100) NOT NULL, o_quantity VARCHAR(255) NOT NULL, buyer_id INT(11) NOT NULL, menu_owner INT(11) NOT NULL)";
     connection.query(userSQL, function (err, result) {
         if (err) throw err;
             console.log("User table created!");
@@ -56,6 +67,10 @@ connection.connect((err) => {
     connection.query(menuSQL, function (err, result) {
         if (err) throw err;
             console.log("Menu table created!");
+    });
+    connection.query(orderSQL, function (err, result) {
+        if (err) throw err;
+            console.log("Order table created!");
     });
 
 });
@@ -219,25 +234,30 @@ app.post('/updateProfile', (req, res) => {
 });
 
 app.post('/searchItem', (req, res) => {
-    //query database for item
     console.log(req.body.item);
     
-    if (req.session.isLoggedIn) {
-        let findRestaurant = "SELECT restaurantname FROM menus m INNER JOIN user u ON m.menu_owner = u.id AND m.p_name = ?";
+    if (!req.session.isLoggedIn) {
+        console.log("Please log in first!");
+    } else {
+        //find restaurants for the owner who has this item on the menu
+        let findRestaurant = "SELECT restaurantname, menu_owner FROM menus m INNER JOIN user u ON m.menu_owner = u.id AND m.p_name = ?";
         connection.query(findRestaurant, [req.body.item], (err, results) => {
             if (err) {
                 throw err;
             } else if (results.length > 0) {
                 console.log(results);
+                req.session.ownerID = results[0].menu_owner
                 res.send(results);
             } else {
                 res.sendStatus(404);
                 console.log("Can't find any menus for this item!");
             }
         });
-    } else {
-        console.log("Please log in first!");
     }
+})
+
+app.get('/getOwnerID', (req,res) => {
+    res.send(req.session.ownerID);
 })
 
 app.post('/filter', (req, res) => {
@@ -358,6 +378,62 @@ app.post('/removeItem', (req, res) => {
         console.log("Please log in first!");
     }
 })
+
+app.post('/addToCart', (req, res) => {
+    const {o_name, o_quantity, menu_owner} = req.body;
+    console.log(req.body);
+    if (!req.session.isLoggedIn) {
+        console.log("Please log in first!");
+    } else {
+        let ownerMenu = "INSERT INTO orders " + "SET o_name = ?, o_quantity = ?, buyer_id = ?, menu_owner = ?";
+        connection.query(ownerMenu, [o_name, o_quantity, req.session.ID, menu_owner], (err, results) => {
+            if (err) {
+                throw err;
+            } else {
+                res.sendStatus(200);
+                console.log("ADDED ORDER!");
+            }
+        });
+    }
+})
+
+app.get('/getCart', (req, res) => {
+    console.log('INISIDE GET CART PAGE')
+    if (!req.session.isLoggedIn) {
+        res.sendStatus(404);
+    } else {
+        let profileSQL = "SELECT * FROM orders WHERE buyer_id = ?";
+        connection.query(profileSQL, [req.session.ID], (err, results) => {
+            if (err) {
+                throw err;
+            } else if (results.length > 0) {
+                console.log(results);
+                res.status(200).send(results);
+            } else {
+                console.log("Can't find any cart items for this owner!");
+            }
+        });
+    }
+});
+
+app.get('/getBuyerOrders', (req, res) => {
+    console.log('INSIDE GET BUYER ORDERS')
+    if (!req.session.isLoggedIn) {
+        res.sendStatus(404);
+    } else {
+        let profileSQL = "SELECT * FROM orders WHERE menu_owner = ?";
+        connection.query(profileSQL, [req.session.ID], (err, results) => {
+            if (err) {
+                throw err;
+            } else if (results.length > 0) {
+                console.log(results);
+                res.status(200).send(results);
+            } else {
+                console.log("Can't find any orders for this owner!");
+            }
+        });
+    }
+});
 
 module.exports = app;
 
