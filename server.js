@@ -36,16 +36,17 @@ app.use(session({
     activeDuration: 5 * 60 * 1000
 }));
 
+/*
 if(process.env.NODE_ENV === 'production') {
     app.use(express.static("client/build"))
-}
+}*/
 
 //initialize database connection
 const connection = mysql.createConnection({
-    host: 'r4919aobtbi97j46.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
-    user: 'jklr5e9iuxu5b0ga',
-    password: 'xll9wjo7ec2d26ar',
-    database: 'lzp2wfiyrz5y9xl0'
+    host: 'localhost',
+    user: 'root',
+    password: 'password',
+    database: 'lab1DB'
 });
 
 //connect to mySQL and create tables
@@ -69,6 +70,21 @@ connection.connect((err) => {
     });
 
 });
+
+/*
+app.get('/testconnectionpooling', (req,res) => {
+    pool.getConnection(function(err, conn) {
+        if(err) {
+            res.send('Error occured')
+        } else {
+            conn.query('SELECT * FROM orders', function(err2, records) {
+                if(!err2) res.send(records)
+                conn.release()
+            }) 
+        }
+    })
+})
+*/
 
 app.post('/calculate', (req, res) => {
 
@@ -230,7 +246,7 @@ app.post('/updateProfile', (req, res) => {
 
 app.post('/searchItem', (req, res) => {
     console.log(req.body.item);
-    
+    console.log("INSIDE SEARCH ITEM")
     if (!req.session.isLoggedIn) {
         console.log("Please log in first!");
     } else {
@@ -256,7 +272,7 @@ app.get('/getOwnerID', (req,res) => {
 })
 
 app.post('/filter', (req, res) => {
-    
+    console.log("INSIDE FILTER PAGE")
     if (req.session.isLoggedIn) {
         let findRestaurant = "SELECT cuisine FROM user u INNER JOIN menus m ON u.id = m.menu_owner GROUP BY cuisine";
         connection.query(findRestaurant, (err, results) => {
@@ -311,7 +327,7 @@ app.get('/getOwnerMenu/lunch', (req,res) => {
 })
 
 app.get('/getOwnerMenu/appetizer', (req,res) => {
-    console.log("INSIDE OWNER MENU")
+    console.log("INSIDE APPETIZER OWNER MENU")
     if (!req.session.isLoggedIn) {
         console.log("Please log in first!");
     } else {
@@ -357,6 +373,7 @@ app.post('/saveItem', (req, res) => {
 })
 
 app.post('/removeItem', (req, res) => {
+    console.log("INSIDE REMOVE ITEM")
     const {p_name, p_description, p_image, p_quantity, p_price} = req.body;
     console.log(req.body);
     if (req.session.isLoggedIn) {
@@ -375,6 +392,7 @@ app.post('/removeItem', (req, res) => {
 })
 
 app.post('/addToCart', (req, res) => {
+    console.log("INSIDE ADD TO CART")
     const {o_name, o_quantity, menu_owner} = req.body;
     console.log(req.body);
     if (!req.session.isLoggedIn) {
@@ -432,4 +450,4 @@ app.get('/getBuyerOrders', (req, res) => {
 
 module.exports = app;
 
-app.listen(PORT, () => console.log('Server listening on port 3001'));
+app.listen(3001, () => console.log('Server listening on port 3001'));

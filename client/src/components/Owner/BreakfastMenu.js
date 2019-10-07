@@ -25,7 +25,6 @@ class BreakfastMenu extends Component {
                             this.state.products.push(res.data[i]);
                         }
                     }
-                    //this.state.products.push(res.data[0]);
                     this.setState({ ownerID: res.data[0].menu_owner });
                     this.setState({ itemID: res.data[0].p_id })
                 }
