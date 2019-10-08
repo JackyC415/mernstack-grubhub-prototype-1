@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import cookie from 'react-cookies';
+import axios from 'axios';
 import { Redirect } from 'react-router';
 import { breakfastItems } from '../Owner/BreakfastMenu';
 import { lunchItems } from '../Owner/LunchMenu';
@@ -32,6 +33,10 @@ class NavbarPage extends Component {
         breakfastItems.length = 0;
         lunchItems.length = 0;
         appetizerItems.length = 0;
+        axios.post('http://localhost:3001/logout')
+            .then(res => {
+                if (res) console.log("Logged Out!");
+            });
         cookie.remove('cookie', { path: '/' });
     }
     toggle() {

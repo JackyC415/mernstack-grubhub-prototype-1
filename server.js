@@ -206,6 +206,12 @@ app.post('/login', (req, res) => {
     }
 });
 
+app.post('/logout', (req,res) => {
+    req.session.isLoggedIn = false;
+    res.sendStatus(200);
+    console.log("Ended user session!");
+})
+
 app.get('/getProfile', (req, res) => {
     console.log('INISIDE PROFILE PAGE')
     if (!req.session.isLoggedIn) {
