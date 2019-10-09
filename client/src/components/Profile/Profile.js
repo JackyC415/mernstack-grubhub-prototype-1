@@ -28,7 +28,6 @@ class Profile extends Component {
           this.setState({ restaurantname: res.data[0].restaurantname });
           this.setState({ phone: res.data[0].phone});
           this.setState({ cuisine: res.data[0].cuisine});
-          this.setState({ zipcode: res.data[0].zipcode });
           this.setState({ loading: true });
         }).catch((err) => {
           console.log('Profile Error: ' + err);

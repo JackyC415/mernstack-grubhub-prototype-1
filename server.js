@@ -142,10 +142,10 @@ app.post('/register', (req, res) => {
                     res.status(404).send('User already exists!');
                 } else {
                     const {name, email, password, restaurantname, zipcode, cuisine, phone, owner} = req.body;
-                    let userSQL = "INSERT INTO user " + "SET name = ?, email = ?, password = ?, restaurantname = ?, cuisine = ?, phone = ?, zipcode = ?, owner = ?";
+                    let userSQL = "INSERT INTO user " + "SET name = ?, email = ?, password = ?, restaurantname = ?, cuisine = ?, zipcode = ?, phone = ?, owner = ?";
                     bcrypt.hash(password, saltRounds, function(err, hash) {
                         if(err) throw err;
-                        connection.query(userSQL, [name, email, hash, restaurantname, zipcode, cuisine, phone, owner]);
+                        connection.query(userSQL, [name, email, hash, restaurantname, cuisine, zipcode, phone, owner]);
                          console.log(value);
                         res.status(200).send('Registered successfully!');
                     });
