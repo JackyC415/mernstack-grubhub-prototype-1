@@ -16,7 +16,8 @@ class LunchMenu extends Component {
     };
 
     componentDidMount() {
-        axios.get('/getOwnerMenu/lunch')
+        const data = { menu_section: 'Lunch'};
+        axios.post('/getOwnerMenu', data)
             .then(res => {
                 if (res) {
                     console.log(res.data);
@@ -25,7 +26,6 @@ class LunchMenu extends Component {
                             this.state.products.push(res.data[i]);
                         }
                     }
-                    //this.state.products.push(res.data[0]);
                     this.setState({ ownerID: res.data[0].menu_owner });
                     this.setState({ itemID: res.data[0].p_id })
                 }
@@ -35,6 +35,7 @@ class LunchMenu extends Component {
     }
 
     saveItem = (data) => {
+        data.menu_section = 'Lunch';
         axios.post('http://localhost:3001/saveItem', data)
             .then(res => {
                 if (res)

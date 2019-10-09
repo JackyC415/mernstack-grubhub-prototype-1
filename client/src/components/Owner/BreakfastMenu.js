@@ -16,7 +16,8 @@ class BreakfastMenu extends Component {
     };
 
     componentDidMount() {
-        axios.get('/getOwnerMenu/breakfast')
+        const data = { menu_section: 'Breakfast'};
+        axios.post('/getOwnerMenu', data)
             .then(res => {
                 if (res) {
                     console.log(res.data);
@@ -34,6 +35,7 @@ class BreakfastMenu extends Component {
     }
 
     saveItem = (data) => {
+        data.menu_section = 'Breakfast';
         axios.post('http://localhost:3001/saveItem', data)
             .then(res => {
                 if (res)
